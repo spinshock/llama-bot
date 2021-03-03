@@ -22,5 +22,8 @@
   "homepage": "https://github.com/spinshock/ttv-bot-discord#readme",
   "dependencies": {
     "discord.js": "^12.5.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0"
   }
 }
