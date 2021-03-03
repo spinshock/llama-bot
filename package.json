@@ -1,0 +1,26 @@
+{
+  "name": "ttv-bot-discord",
+  "version": "1.0.0",
+  "description": "A discord bot to link to TTV emotes",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spinshock/ttv-bot-discord.git"
+  },
+  "keywords": [
+    "ttv",
+    "emotes"
+  ],
+  "author": "Filipov Yavor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spinshock/ttv-bot-discord/issues"
+  },
+  "homepage": "https://github.com/spinshock/ttv-bot-discord#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
