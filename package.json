@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A discord bot to link to TTV emotes",
   "scripts": {
-    "start": "nodemon ./dist/src/bot.js",
+    "start": "node ./dist/src/bot.js",
     "start:watch": "tsc-watch --project . --outDir ./dist --onSuccess \"nodemon ./dist/bot.js\"",
     "build": "tsc --project ."
   },
