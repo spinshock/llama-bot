@@ -36,9 +36,17 @@ const addEmotes = (emotes: TTVEmoteMap): void => {
 };
 
 const server = http.createServer((req, res) => {
+  let responseJson = '';
+  ttvEmotes
+  .forEach(
+    (url, code) => {
+      responseJson += `[${code}]: ${url}\n`
+    }
+  );
+
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html');
-  res.end(ttvEmotes);
+  res.end(JSON.stringify(responseJson));
 });
 
 server.listen(port,() => {
@@ -60,7 +68,7 @@ discordClient.on('ready', async () => {
   ttvEmotes
     .forEach(
       (url, code) => {
-        console.log(`[${code}]`)
+        // console.log(`[${code}]`)
       }
     );
 });
