@@ -55,14 +55,14 @@ server.listen(port,() => {
 
 discordClient.on('ready', async () => {
   console.log(`Logged in as ${discordClient.user.tag}!`);
+  addEmotes(await getTwitchEmotesFromChannels(['lirik', 'forsen', 'yassuo', 'Nmplol']));
   addEmotes(await getBTTVDefaultEmotes());
-  addEmotes(await getBTTVTopEmotes(1000));
   addEmotes(await getBTTVEmotesFromChannels('forsen'));
   addEmotes(await getBTTVEmotesFromChannels('lirik'));
   addEmotes(await getBTTVEmotesFromChannels('yassuo'));
   addEmotes(await getBTTVEmotesFromChannels('shroud'));
   addEmotes(await getBTTVEmotesFromChannels('sodapoppin'));
-  addEmotes(await getTwitchEmotesFromChannels(['lirik', 'forsen', 'yassuo', 'Nmplol']));
+  addEmotes(await getBTTVTopEmotes(1000));
   console.log('Loaded emotes:');
   
   ttvEmotes
