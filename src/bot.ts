@@ -1,11 +1,17 @@
 import * as Discord from 'discord.js';
 import fetch from 'node-fetch';
-import * as credentials from '../cred.json';
 import { TTVEmoteMap } from './model/ttv-emote-map.model';
 import { TTVEmotesRes } from './model/twitchemotes.model';
 import { TTVClient } from './ttv/ttv.client';
 
-const ttvClient = new TTVClient(credentials.ttv_client_id, credentials.ttv_client_secret);
+let ttv_client_id;
+let ttv_client_secret;
+if (process.env.ttv_client_id && process.env.ttv_client_secret) {
+  ttv_client_id = process.env.ttv_client_id;
+  ttv_client_secret = process.env.ttv_client_secret;
+}
+
+const ttvClient = new TTVClient(ttv_client_id, ttv_client_secret);
 
 let emotesUrl = '//cdn.betterttv.net/emote/{{id}}/{{image}}';
 
@@ -70,7 +76,7 @@ discordClient.on('message', (msg) => {
   }
 });
 
-discordClient.login(credentials.token);
+discordClient.login(process.env.discord_token);
 
 const getTwitchEmotesFromChannels = (channels: string[]): Promise<TTVEmoteMap> => {
   return ttvClient.getChannelId(...channels).then((ids) => {
