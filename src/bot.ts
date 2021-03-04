@@ -3,6 +3,11 @@ import fetch from 'node-fetch';
 import { TTVEmoteMap } from './model/ttv-emote-map.model';
 import { TTVEmotesRes } from './model/twitchemotes.model';
 import { TTVClient } from './ttv/ttv.client';
+import http from 'http';
+
+const port = process.env.PORT || 3000
+
+
 
 let ttv_client_id;
 let ttv_client_secret;
@@ -29,6 +34,16 @@ const addEmotes = (emotes: TTVEmoteMap): void => {
     ttvEmotes.set(code, emotes[code]);
   });
 };
+
+const server = http.createServer((req, res) => {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/html');
+  res.end(ttvEmotes);
+});
+
+server.listen(port,() => {
+  console.log(`Server running at port `+port);
+});
 
 discordClient.on('ready', async () => {
   console.log(`Logged in as ${discordClient.user.tag}!`);
