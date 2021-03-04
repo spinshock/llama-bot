@@ -29,7 +29,7 @@ const addEmotes = (emotes: TTVEmoteMap): void => {
     let code = emoteCode;
     let counter = 0;
     while (ttvEmotes.has(code)) {
-      code+= ++counter;
+      code = emoteCode + ++counter;
     }
     ttvEmotes.set(code, emotes[emoteCode]);
   });
