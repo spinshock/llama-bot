@@ -18,7 +18,7 @@ if (process.env.ttv_client_id && process.env.ttv_client_secret) {
 
 const ttvClient = new TTVClient(ttv_client_id, ttv_client_secret);
 
-let emotesUrl = '//cdn.betterttv.net/emote/{{id}}/{{image}}';
+let emotesUrl = '//cdn.betterttv.net/emote/{{id}}/{{image}}.gif';
 
 const discordClient = new Discord.Client();
 
