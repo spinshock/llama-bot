@@ -31,7 +31,7 @@ const addEmotes = (emotes: TTVEmoteMap): void => {
     while (ttvEmotes.has(code)) {
       code+= ++counter;
     }
-    ttvEmotes.set(code, emotes[code]);
+    ttvEmotes.set(code, emotes[emoteCode]);
   });
 };
 
@@ -80,7 +80,6 @@ discordClient.on('message', (msg) => {
   try {
     const url = ttvEmotes.get(msg.content);
     if (url) {
-      // const attachment = new Discord.MessageEmbed({image: { url }});
       msg.channel.send(url);
     }
   } catch(err) {
