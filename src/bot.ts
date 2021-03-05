@@ -29,7 +29,8 @@ const addEmotes = (emotes: TTVEmoteMap): void => {
     let code = emoteCode;
     let counter = 0;
     while (ttvEmotes.has(code)) {
-      code = emoteCode + ++counter;
+      counter++;
+      code = emoteCode + counter;
     }
     ttvEmotes.set(code, emotes[emoteCode]);
   });
@@ -55,7 +56,7 @@ server.listen(port,() => {
 
 discordClient.on('ready', async () => {
   console.log(`Logged in as ${discordClient.user.tag}!`);
-  addEmotes(await getTwitchEmotesFromChannels(['lirik', 'forsen', 'yassuo', 'Nmplol']));
+  addEmotes(await getTwitchEmotesFromChannels(['lirik', 'forsen', 'yassuo', 'Nmplol', 'BobRoss']));
   addEmotes(await getBTTVDefaultEmotes());
   addEmotes(await getBTTVEmotesFromChannels('forsen'));
   addEmotes(await getBTTVEmotesFromChannels('lirik'));
