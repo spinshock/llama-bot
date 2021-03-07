@@ -4,5 +4,5 @@ export interface TTVEmotesRes {
 }
 
 export interface TwitchEmotesChannelRes {
-    emotes: { code: string; id: number; }[];
+    emotes: TTVEmotesRes[];
 }

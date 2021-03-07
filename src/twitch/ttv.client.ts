@@ -1,7 +1,8 @@
 import fetch from "node-fetch";
-import { TTVEmoteMap } from "../model/ttv-emote-map.model";
-import { TwitchEmotesChannelRes } from "../model/twitchemotes.model";
-import { TTVUsersResponse } from "./ttv-users-res.model";
+import { EmoteDTO } from "../api/models/emote.dto";
+import { Emote } from "../database/entities/Emote.entity";
+import { TwitchEmotesChannelRes } from "../models/twitch-emotes/twitch-emotes.model";
+import { TTVUsersResponse } from "../models/twitch/ttv-users-res.model";
 interface TTVAuthRes {
     access_token: string;
     expires_in: number;
@@ -15,25 +16,22 @@ export class TTVClient {
         this.getAccessToken();
     }
 
-    public async getEmotesForChannelIds(ids: string[]): Promise<TTVEmoteMap> {
-        let emotes: TTVEmoteMap;
-        for(let i = 0; i < ids.length; i++) {
-            const fetchedEmotes: TTVEmoteMap = await fetch(`https://api.twitchemotes.com/api/v4/channels/${ids[i]}`)
-                .then((res) => res.json())
-                .then(({ emotes }: TwitchEmotesChannelRes) => {
-                    if (emotes && emotes.length) {
-                        return emotes.reduce((accEmotes, { code, id }) => ({
-                            ...accEmotes,
-                            [code]: `https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0`,
-                        }), {}) as TTVEmoteMap;
-                    }
-                })
-            emotes = {
-                ...emotes, 
-                ...fetchedEmotes,
-            };
-        }
-        return emotes;
+    public async getEmotesForChannelIds(ids: string[]): Promise<EmoteDTO[]> {
+        let emotes: Emote[] = [];
+        const fetchedEmotes = ids.map(async (id) => {
+            const emotesRes = await fetch(`https://api.twitchemotes.com/api/v4/channels/${id}`);
+            const { emotes } = await emotesRes.json() as TwitchEmotesChannelRes;
+            if (emotes && emotes.length) {
+                return emotes.map(({ code, id }) => ({
+                    code,
+                    url: `https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0`,
+                }));
+            } else {
+                return [];
+            }
+        });
+        const flattenedEmotes = (await Promise.all(fetchedEmotes)).reduce((flattenedEmotes, emotes) => [...flattenedEmotes, ...emotes], []);
+        return flattenedEmotes;
     }
 
     public async getChannelId(...loginNames: string[]): Promise<string[]> {

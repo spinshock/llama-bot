@@ -1,3 +1,4 @@
 dist
 node_modules
 cred.json
+ormconfig.json
