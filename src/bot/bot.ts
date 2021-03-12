@@ -3,7 +3,6 @@ import { BetterTwitchTVClient } from "../bttv-emotes/bttv.client";
 import { TwitchEmotesClient } from "../twitch-emotes/twitch-emotes.client";
 import { TTVClient } from "../twitch/ttv.client";
 import emotesRepo from "../database/repositories/emotes.repository";
-import { getEmoteEmbed } from "./emote-embed";
 
 let ttv_client_id;
 let ttv_client_secret;

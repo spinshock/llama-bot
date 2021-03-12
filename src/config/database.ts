@@ -5,6 +5,7 @@ let config: ConnectionOptions = {
   type: "postgres",
   entities: [Emote],
   synchronize: true,
+  ssl: { rejectUnauthorized: false },
 };
 
 if (process.env.DATABASE_URL) {
