@@ -2,9 +2,9 @@ import { getRepository } from "typeorm";
 import { EmoteDTO } from "../../api/models/emote.dto";
 import { Emote } from "../entities/Emote.entity";
 
-export const getEmotes = async (): Promise<Emote> => {
+export const getEmotes = async (): Promise<Emote[]> => {
   const emotesRepo = getRepository(Emote);
-  return await emotesRepo.findOne();
+  return await emotesRepo.find();
 };
 
 export const getEmoteByCode = async (code: string): Promise<Emote> => {

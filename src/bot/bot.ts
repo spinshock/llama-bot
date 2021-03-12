@@ -1,14 +1,17 @@
 import * as Discord from "discord.js";
-import { BetterTwitchTVClient } from "../bttv-emotes/bttv.client";
-import { TwitchEmotesClient } from "../twitch-emotes/twitch-emotes.client";
-import { TTVClient } from "../twitch/ttv.client";
+import { BetterTwitchTVClient } from "../clients/bttv.client";
+import { TwitchEmotesClient } from "../clients/twitch-emotes.client";
+import { TTVClient } from "../clients/ttv.client";
 import emotesRepo from "../database/repositories/emotes.repository";
+import credentials from "../../cred.json";
 
-let ttv_client_id;
-let ttv_client_secret;
-if (process.env.ttv_client_id && process.env.ttv_client_secret) {
-  ttv_client_id = process.env.ttv_client_id;
-  ttv_client_secret = process.env.ttv_client_secret;
+let ttv_client_id = process.env.ttv_client_id;
+let ttv_client_secret = process.env.ttv_client_secret;
+if (!ttv_client_id) {
+  ttv_client_id = credentials.ttv_client_id;
+}
+if (!ttv_client_secret) {
+  ttv_client_secret = credentials.ttv_client_secret;
 }
 
 const ttvClient = new TTVClient(ttv_client_id, ttv_client_secret);
@@ -50,6 +53,7 @@ discordClient.on("message", async (msg) => {
         const embed = new Discord.MessageEmbed().setThumbnail(emote.url);
         msg.reply(`Added emote: ${emote.code}`, { embed });
       });
+      msg.reply(`All emotes for channel ${channel} have been added.`);
     } catch (err) {
       msg.reply(err.toString());
     }
@@ -91,7 +95,11 @@ discordClient.on("message", async (msg) => {
 });
 
 export const startDiscordBot = () => {
-  discordClient.login(process.env.discord_token);
+  let token = process.env.discord_token;
+  if (!token) {
+    token = credentials.discord_token;
+  }
+  discordClient.login(token);
   console.log("Discord bot started.");
 
   return discordClient;

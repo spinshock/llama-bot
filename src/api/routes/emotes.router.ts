@@ -1,13 +1,22 @@
 import express from "express";
-import { getEmoteByCode } from "../../database/repositories/emotes.repository";
+import {
+  getEmoteByCode,
+  getEmotes,
+} from "../../database/repositories/emotes.repository";
 
 const router = express.Router();
 
 router.get("/:code", async (req, res) => {
   const codeParam = req.params.code;
-  const emote = getEmoteByCode(codeParam);
+  const emote = await getEmoteByCode(codeParam);
 
   return res.send({ emote });
+});
+
+router.get("/", async (req, res) => {
+  const emotes = await getEmotes();
+
+  return res.send({ emotes });
 });
 
 export default router;

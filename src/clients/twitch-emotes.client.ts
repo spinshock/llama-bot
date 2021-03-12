@@ -1,5 +1,5 @@
 import { EmoteDTO } from "../api/models/emote.dto";
-import { TTVClient } from "../twitch/ttv.client";
+import { TTVClient } from "./ttv.client";
 
 export class TwitchEmotesClient {
   constructor(private readonly ttvClient: TTVClient) {}

@@ -18,6 +18,7 @@ if (process.env.DATABASE_URL) {
     username: "postgres",
     password: "arcen899",
     database: "ttv_emotes_discord_bot",
+    ssl: false,
   };
 }
 

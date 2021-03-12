@@ -1,6 +1,7 @@
 {
   "include": ["src"],
   "compilerOptions": {
+    "jsx": "react",
     "lib": ["DOM"],
     "module": "CommonJS",
     "noImplicitAny": true,
