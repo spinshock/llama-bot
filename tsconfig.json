@@ -1,9 +1,17 @@
 {
-  "include": ["src"],
+  "include": [
+    "src/api/**/*.ts",
+    "src/bot/**/*.ts",
+    "src/clients/**/*.ts",
+    "src/config/**/*.ts",
+    "src/database/**/*.ts",
+    "src/models/**/*.ts",
+    "src/main.ts"
+  ],
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["DOM"],
-    "module": "esnext",
+    "module": "CommonJS",
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -21,7 +29,6 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "isolatedModules": true
   }
 }

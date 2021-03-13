@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A discord bot to link to TTV emotes",
   "scripts": {
-    "dev": "tsc-watch --project . --outDir ./dist --onSuccess \"nodemon ./dist/src/main.js\"",
+    "dev": "tsc-watch --project . --outDir ./dist --onSuccess \"nodemon ./dist/main.js\"",
     "build": "tsc --project . && node scripts/build.js",
-    "start": "node ./dist/src/main.js"
+    "start": "node ./dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +16,6 @@
   "bugs": {
     "url": "https://github.com/spinshock/ttv-bot-discord/issues"
   },
-  "homepage": "https://github.com/spinshock/ttv-bot-discord#readme",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
@@ -154,5 +153,17 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
