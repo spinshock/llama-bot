@@ -140,11 +140,12 @@ discordClient.on("message", async (msg) => {
 
 discordClient.on("ready", () => {
   discordClient.user.setPresence({
+    status: "online",
     activity: {
-      name: "Maika ti",
+      name: "https://ttv-discord-bot.herokuapp.com/",
+      type: "CUSTOM_STATUS",
     },
   });
-  discordClient.user.setStatus("dnd");
 });
 
 export const startDiscordBot = () => {
