@@ -53,6 +53,46 @@ discordClient.on("message", async (msg) => {
   }
 });
 
+discordClient.on("message", (msg) => {
+  if (msg.author.bot) {
+    return;
+  }
+  if (msg.content === "georgi") {
+    msg.channel.send("= gei");
+  }
+  if (msg.content === "georgi e gei") {
+    msg.channel.send("da");
+  }
+});
+
+discordClient.on("message", (msg) => {
+  if (msg.author.bot) {
+    return;
+  }
+  if (
+    msg.content.startsWith("-h") ||
+    msg.content.startsWith("-help") ||
+    msg.content.startsWith("-e help")
+  ) {
+    try {
+      msg.reply(
+        "Commands: \n`-e add-channel {twitch_channel_name}` \n`-e add-emote {emote_name_no_space} {url_to_emote_image}`"
+      );
+    } catch (err) {
+      msg.reply(err.toString());
+    }
+  }
+});
+
+discordClient.on("message", (msg) => {
+  if (msg.author.bot) {
+    return;
+  }
+  if (msg.mentions.users.filter((u) => u.id === discordClient.user.id).size) {
+    msg.reply("https://ttv-discord-bot.herokuapp.com/");
+  }
+});
+
 discordClient.on("message", async (msg) => {
   if (msg.author.bot) {
     return;
@@ -85,6 +125,15 @@ discordClient.on("message", async (msg) => {
       msg.reply(err.toString());
     }
   }
+});
+
+discordClient.on("ready", () => {
+  discordClient.user.setPresence({
+    activity: {
+      name: "Maika ti",
+    },
+  });
+  discordClient.user.setStatus("dnd");
 });
 
 export const startDiscordBot = () => {
