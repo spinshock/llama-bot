@@ -101,25 +101,36 @@ discordClient.on("message", async (msg) => {
     try {
       const emoteToAdd = msg.content.slice(13);
       let [emoteCode, emoteUrl] = emoteToAdd.split(" ");
-      // if (!emoteUrl) {
-      //   emoteUrl = await (
-      //     await twitchEmotesClient.getTwitchEmoteFromCode(emoteCode)
-      //   ).url;
-      // }
-      console.log(emoteCode, emoteUrl);
 
       const savedEmote = await emotesRepo.addEmote(emoteCode, emoteUrl);
       if (savedEmote) {
-        msg.edit(`Added emote: ${savedEmote.code} EDIT`);
-        console.log(savedEmote);
-
         msg.channel.send(`Added emote: ${savedEmote.code}`, {
           files: [savedEmote.url],
         });
       } else {
-        msg.channel.send(`Couldn't add emote: ${savedEmote.code}`, {
-          files: [savedEmote.url],
-        });
+        msg.channel.send(`Couldn't add emote: ${emoteCode}`);
+      }
+    } catch (err) {
+      msg.reply(err.toString());
+    }
+  }
+});
+
+discordClient.on("message", async (msg) => {
+  if (msg.author.bot) {
+    return;
+  }
+  if (msg.content.startsWith("-e remove-emote ")) {
+    try {
+      const emoteToRemove = msg.content.slice(15);
+
+      const removedEmote = await emotesRepo.removeEmote(emoteToRemove);
+      if (removedEmote) {
+        msg.channel.send(
+          `Removed emote: ${removedEmote.code}\nSay goodbye to ${removedEmote.url}`
+        );
+      } else {
+        msg.channel.send(`Emote not found: ${emoteToRemove}`);
       }
     } catch (err) {
       msg.reply(err.toString());

@@ -29,4 +29,14 @@ export const addEmotes = async (emotes: EmoteDTO[]): Promise<Emote[]> => {
   return savedEmotes;
 };
 
-export default { getEmotes, getEmoteByCode, addEmote, addEmotes };
+export const removeEmote = async (code: string): Promise<Emote> => {
+  const emotesRepo = getRepository(Emote);
+  const foundEmote = await emotesRepo.findOne({ where: { code } });
+  let removedEmote: Emote | null;
+  if (foundEmote) {
+    removedEmote = await emotesRepo.remove(foundEmote);
+  }
+  return removedEmote;
+};
+
+export default { getEmotes, getEmoteByCode, addEmote, addEmotes, removeEmote };
