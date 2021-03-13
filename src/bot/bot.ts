@@ -122,7 +122,7 @@ discordClient.on("message", async (msg) => {
   }
   if (msg.content.startsWith("-e remove-emote ")) {
     try {
-      const emoteToRemove = msg.content.slice(15);
+      const emoteToRemove = msg.content.slice(16);
 
       const removedEmote = await emotesRepo.removeEmote(emoteToRemove);
       if (removedEmote) {
