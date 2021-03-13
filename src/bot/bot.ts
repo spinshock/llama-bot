@@ -76,7 +76,7 @@ discordClient.on("message", (msg) => {
   ) {
     try {
       msg.reply(
-        "Commands: \n`-e add-channel {twitch_channel_name}` \n`-e add-emote {emote_name_no_space} {url_to_emote_image}`"
+        "Commands: \n`-e add-channel {twitch_channel_name}` \n`-e add-emote {emote_name_no_space} {url_to_emote_image}`\n`-e remove-emote {emote_name}`"
       );
     } catch (err) {
       msg.reply(err.toString());
