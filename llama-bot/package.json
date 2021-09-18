@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ts-node ./bot.ts",
     "start:watch": "nodemon",
-    "build": "tsc --project . && node scripts/build.js"
+    "build": "tsc --project ."
   },
   "repository": {
     "type": "git",
