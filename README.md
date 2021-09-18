@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <a href="https://github.com/spisnhock/llama-bot-discord">
+  <a href="https://github.com/spinshock/llama-bot-discord">
     <img src="https://cdn.discordapp.com/icons/138332063743868928/030428c38a413cf8968e3b2e38bbc7d6.png?size=128" alt="Logo" width="80" height="80">
   </a>
 
@@ -10,18 +10,15 @@
     Llamify your discord channel
     <br/>
     <br/>
-    <a href="https://github.com/spisnhock/llama-bot-discord"><strong>Explore the docs »</strong></a>
-    <br/>
-    <br/>
-    <a href="https://github.com/spisnhock/llama-bot-discord">View Demo</a>
+    <a href="https://github.com/spinshock/llama-bot-discord">View Demo</a>
     .
-    <a href="https://github.com/spisnhock/llama-bot-discord/issues">Report Bug</a>
+    <a href="https://github.com/spinshock/llama-bot-discord/issues">Report Bug</a>
     .
-    <a href="https://github.com/spisnhock/llama-bot-discord/issues">Request Feature</a>
+    <a href="https://github.com/spinshock/llama-bot-discord/issues">Request Feature</a>
   </p>
 </p>
 
-![Downloads](https://img.shields.io/github/downloads/spisnhock/llama-bot-discord/total) ![Contributors](https://img.shields.io/github/contributors/spisnhock/llama-bot-discord?color=dark-green) ![Issues](https://img.shields.io/github/issues/spisnhock/llama-bot-discord) ![License](https://img.shields.io/github/license/spisnhock/llama-bot-discord) 
+![Downloads](https://img.shields.io/github/downloads/spinshock/llama-bot-discord/total) ![Contributors](https://img.shields.io/github/contributors/spinshock/llama-bot-discord?color=dark-green) ![Issues](https://img.shields.io/github/issues/spinshock/llama-bot-discord) ![License](https://img.shields.io/github/license/spinshock/llama-bot-discord) 
 
 ## Table Of Contents
 
@@ -102,15 +99,15 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## Roadmap
 
-See the [open issues](https://github.com/spisnhock/llama-bot-discord/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/spinshock/llama-bot-discord/issues) for a list of proposed features (and known issues).
 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/spisnhock/llama-bot-discord/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
+* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/spinshock/llama-bot-discord/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
 * Please make sure you check your spelling and grammar.
 * Create individual PR for each suggestion.
-* Please also read through the [Code Of Conduct](https://github.com/spisnhock/llama-bot-discord/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
+* Please also read through the [Code Of Conduct](https://github.com/spinshock/llama-bot-discord/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
 ### Creating A Pull Request
 
@@ -122,7 +119,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/spisnhock/llama-bot-discord/blob/main/LICENSE.md) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/spinshock/llama-bot-discord/blob/main/LICENSE.md) for more information.
 
 ## Authors
 
