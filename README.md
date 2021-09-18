@@ -1,7 +1,7 @@
 <br/>
 <p align="center">
   <a href="https://github.com/spinshock/llama-bot-discord">
-    <img src="https://cdn.discordapp.com/icons/138332063743868928/030428c38a413cf8968e3b2e38bbc7d6.png?size=128" alt="Logo" width="80" height="80">
+    <img src="./images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Llama bot for Discord</h3>
