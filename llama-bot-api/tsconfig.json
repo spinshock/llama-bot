@@ -1,0 +1,35 @@
+{
+  "include": [
+    "client/src/api/**/*.ts",
+    "client/src/bot/**/*.ts",
+    "client/src/clients/**/*.ts",
+    "client/src/config/**/*.ts",
+    "client/src/database/**/*.ts",
+    "client/src/models/**/*.ts",
+    "client/src/main.ts",
+    "bot/bttv.client.ts"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["DOM"],
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "es5",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true
+  }
+}
