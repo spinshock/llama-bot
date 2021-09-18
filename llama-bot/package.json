@@ -12,7 +12,7 @@
     "url": "git+https://github.com/spinshock/llama-bot-discord.git"
   },
   "author": "Filipov Yavor",
-  "license": "0BSD",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/spinshock/llama-bot-discord/issues"
   },
