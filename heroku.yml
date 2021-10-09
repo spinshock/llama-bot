@@ -1,8 +1,7 @@
 # Resources to provision on app creation
 setup:
     addons:
-        - plan: heroku-postgresql
-        as: DATABASE
+    - plan: heroku-postgresql
 # Reference the Dockerfiles to build into Docker images
 build:
     docker:
