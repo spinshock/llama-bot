@@ -43,7 +43,7 @@ jobs:
   llama-bot-lint:
     executor: llama-bot-docker-executor
     steps:
-      - restore-cache:
+      - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Lint
@@ -52,7 +52,7 @@ jobs:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
     steps:
-      - restore-cache:
+      - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Build
@@ -63,7 +63,7 @@ jobs:
     environment:
       HEROKU_APP_NAME: "llama-bot"
     steps:
-      - restore-cache:
+      - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
