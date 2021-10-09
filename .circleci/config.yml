@@ -31,13 +31,13 @@ jobs:
       - save_cache:
           key: llama-bot-nodemodules-{{ checksum "package-lock.json" }}
           paths:
-            - llama-bot/node_modules
+            - node_modules
       # Save current workflow installed state in cache
       # .Environment.CIRCLE_SHA1 makes it unique for each build
       - save_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - llama-bot
+            - ./
 
   llama-bot-lint:
     executor: llama-bot-docker-executor
