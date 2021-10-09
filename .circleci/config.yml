@@ -3,53 +3,60 @@ version: 2.1
 orbs:
   heroku-orb: circleci/heroku@1.2.6 # Invoke the Heroku orb
 
+
 executors:
   llama-bot-docker-executor:
     docker:
       - image: cimg/node:14.17.6
-      - working_directory: ~/llama-bot-discord
+    working_directory: ~/llama-bot-discord/llama-bot
       
 jobs:
   llama-bot-install:
     executor: llama-bot-docker-executor
+    working_directory: ~/llama-bot-discord
     steps:
       - checkout:
-        path: llama-bot
+          path: llama-bot
       # Try to restore dependencies from cache
-      - restore-cache:
-        keys:
-          - llama-bot-nodemodules-{{ checksum "package-lock.json" }}
-          - llama-bot-nodemodules-
+      - restore_cache:
+          keys:
+            - llama-bot-nodemodules-{{ checksum "package-lock.json" }}
+            - llama-bot-nodemodules-
       - run:
-        name: Install dependencies
-        command: npm install
+          name: Debug
+          command: ls
+      - run:
+          name: Install dependencies
+          command: npm install
       # Update dependencies cache
       - save_cache:
-        key: llama-bot-nodemodules-{{ checksum "package-lock.json" }}
-        paths:
-          - llama-bot/node_modules
+          key: llama-bot-nodemodules-{{ checksum "package-lock.json" }}
+          paths:
+            - llama-bot/node_modules
       # Save current workflow installed state in cache
       # .Environment.CIRCLE_SHA1 makes it unique for each build
       - save_cache:
-        key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - llama-bot
 
   llama-bot-lint:
     executor: llama-bot-docker-executor
     steps:
       - restore-cache:
-        key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-        name: Lint
-        command: npm run lint
+          name: Lint
+          command: npm run lint
   llama-bot-test:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
     steps:
       - restore-cache:
-        key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-        name: Build
-        command: npm build
+          name: Build
+          command: npm build
   llama-bot-build-publish:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
@@ -57,7 +64,7 @@ jobs:
       HEROKU_APP_NAME: "llama-bot"
     steps:
       - restore-cache:
-        key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           command: |
             git push heroku sequential-branch-filter:master
@@ -71,15 +78,15 @@ workflows:
     jobs:
       - llama-bot-install
       - llama-bot-lint:
-        - requires:
-          - llama-bot-install
+          requires:
+            - llama-bot-install
       - llama-bot-test:
-        - requires:
-          - llama-bot-install
-      - llama-bot-build-publish:
-        - requires:
-          - llama-bot-lint
-          - llama-bot-test
+          requires:
+            - llama-bot-install
+      # - llama-bot-build-publish:
+      #   - requires:
+      #     - llama-bot-lint
+      #     - llama-bot-test
   # llama-bot-api:
   #   jobs:
   #     - llama-bot-api-lint
