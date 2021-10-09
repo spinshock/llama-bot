@@ -13,10 +13,9 @@ executors:
 jobs:
   llama-bot-install:
     executor: llama-bot-docker-executor
-    working_directory: ~/llama-bot-discord
     steps:
       - checkout:
-          path: llama-bot
+          path: ~/llama-bot-discord
       # Try to restore dependencies from cache
       - restore_cache:
           keys:
