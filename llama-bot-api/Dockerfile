@@ -7,7 +7,7 @@ RUN chown -R node:node /app
 USER node
 WORKDIR /app
 
-COPY --chown=node:node ./package*.json .
+COPY --chown=node:node ./package*.json ./
 
 RUN npm ci
 
