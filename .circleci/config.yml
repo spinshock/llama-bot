@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   heroku-orb: circleci/heroku@1.2.6 # Invoke the Heroku orb
 
-
 executors:
   llama-bot-docker-executor:
     docker:
@@ -22,9 +21,6 @@ jobs:
             - llama-bot-nodemodules-v1-{{ checksum "package-lock.json" }}
             - llama-bot-nodemodules-v1-
       - run:
-          name: Debug
-          command: ls
-      - run:
           name: Install dependencies
           command: npm install
       # Update dependencies cache
@@ -38,7 +34,6 @@ jobs:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ./
-
   llama-bot-lint:
     executor: llama-bot-docker-executor
     steps:

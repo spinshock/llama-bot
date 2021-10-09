@@ -31,8 +31,7 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node ./config/ ./config/
 COPY --chown=node:node ./assets/ ./assets/
 
-EXPOSE 5000
-ENV NODE_ENV=${NODE_ENV}
+ARG NODE_ENV=${NODE_ENV}
 ENV DISCORD_TOKEN=${DISCORD_TOKEN}
 ENV TTV_CLIENT_ID=${TTV_CLIENT_ID}
 ENV TTV_CLIENT_SECRET=${TTV_CLIENT_SECRET}
