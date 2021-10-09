@@ -28,10 +28,10 @@ COPY --from=build --chown=node:node app/node_modules ./node_modules
 
 EXPOSE 5000
 
-ARG DATABASE_URL ${DATABASE_URL}
+ARG DATABASE_URL
 ENV DATABASE_URL ${DATABASE_URL}
 
-ARG NODE_ENV ${NODE_ENV}
+ARG NODE_ENV
 ENV NODE_ENV ${NODE_ENV}
 
 CMD [ "node", "--unhandled-rejections=strict", "dist/index.js" ]
