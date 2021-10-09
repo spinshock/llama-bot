@@ -7,15 +7,14 @@ services:
     build:
       context: ./llama-bot
       dockerfile: Dockerfile
-    ports:
-      - "5000:5000"
-    volumes:
-      - .llama-bot:/app
+    # volumes:
+    #   - .llama-bot:/app
     environment:
-      NODE_ENV: ${BOT_NODE_ENV}
-      DISCORD_TOKEN: ${BOT_DISCORD_TOKEN}
-      TTV_CLIENT_ID: ${BOT_TTV_CLIENT_ID}
-      TTV_CLIENT_SECRET: ${BOT_TTV_CLIENT_SECRET}
+      NODE_ENV: ${NODE_ENV}
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      TTV_CLIENT_ID: ${TTV_CLIENT_ID}
+      TTV_CLIENT_SECRET: ${TTV_CLIENT_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
   llama-bot-api:
     container_name: llama-bot-api
     hostname: llama-bot-api
@@ -39,7 +38,7 @@ services:
     volumes:
       - ./volume:/var/lib/postgresql
     environment:
-      - POSTGRES_DB=
+      - POSTGRES_DB=llama-bot-database
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
     ports:

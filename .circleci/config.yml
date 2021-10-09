@@ -8,8 +8,13 @@ executors:
     docker:
       - image: cimg/node:14.17.6
     working_directory: ~/llama-bot-discord/llama-bot
+  llama-bot-api-docker-executor:
+    docker:
+      - image: cimg/node:14.17.6
+    working_directory: ~/llama-bot-discord/llama-bot-api
       
 jobs:
+  # llama-bot
   llama-bot-install:
     executor: llama-bot-docker-executor
     steps:
@@ -55,16 +60,78 @@ jobs:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
     environment:
-      HEROKU_APP_NAME: "llama-bot"
+      HEROKU_APP_NAME: "llama-bot-discord"
     steps:
       - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+      # Deploy to Heroku
+      - heroku-orb/install
+      - run: heroku container:login
+      # Push built image to heroku container registry
+      - heroku/push-docker-image:
+          process-types: llama-bot
+      # Release the pushed image (aka deploy)
+      # - heroku/release-docker-image:
+      #     process-types: llama-bot
+  # llama-bot-api
+  llama-bot-api-install:
+    executor: llama-bot-api-docker-executor
+    steps:
+      - checkout:
+          path: ~/llama-bot-discord
+      # Try to restore dependencies from cache
+      - restore_cache:
+          keys:
+            - llama-bot-api-nodemodules-v1-{{ checksum "package-lock.json" }}
+            - llama-bot-api-nodemodules-v1-
       - run:
-          command: |
-            git push heroku sequential-branch-filter:master
-            heroku run rake db:migrate
-            sleep 5 # sleep for 5 seconds to wait for dynos
-            heroku restart
+          name: Install dependencies
+          command: npm install
+      # Update dependencies cache
+      - save_cache:
+          key: llama-bot-api-nodemodules-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      # Save current workflow installed state in cache
+      # .Environment.CIRCLE_SHA1 makes it unique for each build
+      - save_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+  llama-bot-api-lint:
+    executor: llama-bot-api-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: npm run lint
+  llama-bot-api-test:
+    executor: llama-bot-api-docker-executor
+    working_directory: llama-bot-api
+    steps:
+      - restore_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Build
+          command: npm build
+  llama-bot-api-build-publish:
+    executor: llama-bot-api-docker-executor
+    working_directory: llama-bot-api
+    environment:
+      HEROKU_APP_NAME: "llama-bot-discord"
+    steps:
+      - restore_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+      # Deploy to Heroku
+      - heroku-orb/install
+      - run: heroku container:login
+      # Push built image to heroku container registry
+      - heroku/push-docker-image:
+          process-types: llama-bot-api
+      # Release the pushed image (aka deploy)
+      # - heroku/release-docker-image:
+      #     process-types: llama-bot-api
 
 workflows:
   version: 2
@@ -77,19 +144,18 @@ workflows:
       - llama-bot-test:
           requires:
             - llama-bot-install
-      # - llama-bot-build-publish:
-      #   - requires:
-      #     - llama-bot-lint
-      #     - llama-bot-test
-  # llama-bot-api:
-  #   jobs:
-  #     - llama-bot-api-lint
-  #     - llama-bot-api-test
-  #     - llama-bot-api-build
-  #     - llama-bot-api-publish:
-  #       - requires:
-  #         - llama-bot-api-test
-  #         - llama-bot-api-build
+      - llama-bot-build-publish:
+        - requires:
+          - llama-bot-lint
+          - llama-bot-test
+  llama-bot-api:
+    jobs:
+      - llama-bot-api-lint
+      - llama-bot-api-test
+      - llama-bot-api-build-publish:
+        - requires:
+          - llama-bot-api-lint
+          - llama-bot-api-test
   # llama-bot-client:
   #   jobs:
   #     - llama-bot-api-lint

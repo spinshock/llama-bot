@@ -30,7 +30,7 @@ const discordClient = new Discord.Client({
     status: "online",
     activities: [
       {
-        name: "https://ttv-discord-bot.herokuapp.com/",
+        name: "https://llama-bot-discord.herokuapp.com/",
         type: "CUSTOM",
       },
     ],
@@ -76,13 +76,13 @@ discordClient.on("ready", () => {
 });
 
 export const startDiscordBot = () => {
-  if (!process.env.discord_token) {
-    throw Error("No discord token provided");
-  }
-  discordClient.login(process.env.discord_token);
-  console.log("Discord bot started.");
+  console.log(process.env);
 
-  return discordClient;
+  if (!process.env.DISCORD_TOKEN) {
+    throw Error("No discord token provided.");
+  }
+  discordClient.login(process.env.DISCORD_TOKEN);
+  console.log("Discord bot started.");
 };
 
 startDiscordBot();

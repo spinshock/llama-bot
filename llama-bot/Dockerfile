@@ -8,10 +8,11 @@ USER node
 WORKDIR /app
 
 COPY --chown=node:node ./package*.json ./
-COPY --chown=node:node tsconfig.json .
-COPY --chown=node:node ./src/ ./src/
 
 RUN npm ci
+
+COPY --chown=node:node tsconfig.json .
+COPY --chown=node:node ./src/ ./src/
 
 RUN npm run build
 
@@ -31,9 +32,20 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node ./config/ ./config/
 COPY --chown=node:node ./assets/ ./assets/
 
-ARG NODE_ENV=${NODE_ENV}
-ENV DISCORD_TOKEN=${DISCORD_TOKEN}
-ENV TTV_CLIENT_ID=${TTV_CLIENT_ID}
-ENV TTV_CLIENT_SECRET=${TTV_CLIENT_SECRET}
+
+ARG NODE_ENV ${NODE_ENV}
+ENV NODE_ENV ${NODE_ENV}
+
+ARG DATABASE_URL ${DATABASE_URL}
+ENV DATABASE_URL ${DATABASE_URL}
+
+ARG DISCORD_TOKEN ${DISCORD_TOKEN}
+ENV DISCORD_TOKEN ${DISCORD_TOKEN}
+
+ARG TTV_CLIENT_ID ${TTV_CLIENT_ID}
+ENV TTV_CLIENT_ID ${TTV_CLIENT_ID}
+
+ARG TTV_CLIENT_SECRET ${TTV_CLIENT_SECRET}
+ENV TTV_CLIENT_SECRET ${TTV_CLIENT_SECRET}
 
 CMD [ "node", "--unhandled-rejections=strict", "--trace-deprecation=true", "dist/bot.js" ]

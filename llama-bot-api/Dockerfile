@@ -23,9 +23,15 @@ LABEL maintainer="Yavor Filipov <yavorfilipov9@gmail.com> (@spinshock)"
 USER node
 WORKDIR /app
 
-COPY --from=build --chown=node:node app/dist .
+COPY --from=build --chown=node:node app/dist ./dist
+COPY --from=build --chown=node:node app/node_modules ./node_modules
 
 EXPOSE 5000
-ENV NODE_ENV=${BOT_NODE_ENV}
 
-CMD [ "node", "--unhandled-rejections=strict", "index.js" ]
+ARG DATABASE_URL ${DATABASE_URL}
+ENV DATABASE_URL ${DATABASE_URL}
+
+ARG NODE_ENV ${NODE_ENV}
+ENV NODE_ENV ${NODE_ENV}
+
+CMD [ "node", "--unhandled-rejections=strict", "dist/index.js" ]
