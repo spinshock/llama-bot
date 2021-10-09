@@ -1,18 +1,48 @@
 version: 2.1
+
+orbs:
+  heroku: circleci/heroku@0.0.10. # Invoke the Heroku orb
+
 executors:
-  my-custom-executor:
+  llama-bot-docker-executor:
     docker:
       - image: cimg/node:14.17.6
+      - image: registry.heroku.com/llama-bot
+        auth:
+          username: $HEROKU_UN
+          email: $HEROKU_EMAIL
+          password: $HEROKU_PWD
+
       
 jobs:
   llama-bot-build:
-
-    executor: my-custom-executor
+    executor: llama-bot-docker-executor
     steps:
       - checkout
-      - run: |
-          npm install
-          npm build
+      - run:
+        name: Install dependencies
+        command: npm install
+      - run:
+        name: Build
+        command: npm build
+  llama-bot-deploy-heroku:
+    machine:
+        enabled: true
+    working_directory: ~/circleci-demo-workflows
+    environment:
+      HEROKU_APP: "llama-bot-discord" # define env var $HEROKU_APP
+    steps:
+      - checkout
+      - run:
+          name: Setup Heroku
+          command: bash .circleci/setup-heroku.sh # run a script to set up Heroku
+
+      - run:
+          command: |
+            git push heroku sequential-branch-filter:master
+            heroku run rake db:migrate
+            sleep 5 # sleep for 5 seconds to wait for dynos
+            heroku restart
 
 workflows:
   my-custom-workflow:

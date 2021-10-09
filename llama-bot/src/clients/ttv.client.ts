@@ -1,56 +1,81 @@
-import fetch from "node-fetch";
-import { EmoteDTO } from "../api/models/emote.dto";
-import { Emote } from "../database/entities/Emote.entity";
+import axios from "axios";
+import { Emote } from "../models/emote";
 import { TwitchEmotesChannelRes } from "../models/twitch-emotes/twitch-emotes.model";
 import { TTVUsersResponse } from "../models/twitch/ttv-users-res.model";
 interface TTVAuthRes {
-    access_token: string;
-    expires_in: number;
-    scope: string[];
-    token_type: string;
+  access_token: string;
+  expires_in: number;
+  scope: string[];
+  token_type: string;
 }
 export class TTVClient {
-    private accessToken: string;
+  private accessToken!: string;
 
-    constructor(private readonly clientId: string, private readonly clientSecret: string) {
-        this.getAccessToken();
+  constructor(
+    private readonly clientId: string,
+    private readonly clientSecret: string
+  ) {
+    this.setAccessToken();
+  }
+
+  public async getEmotesForChannelIds(ids: string[]): Promise<Emote[]> {
+    try {
+      const fetchedEmotes = ids.map(async (id) => {
+        const emotesRes = await axios.get<TwitchEmotesChannelRes>(
+          `https://api.twitchemotes.com/api/v4/channels/${id}`
+        );
+        const { emotes } = emotesRes.data;
+        if (emotes && emotes.length) {
+          return emotes.map(({ code, id }) => ({
+            code,
+            url: `https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0`,
+          }));
+        } else {
+          return [];
+        }
+      });
+      const flattenedEmotes = (await Promise.all(fetchedEmotes)).reduce(
+        (flattenedEmotes, emotes) => [...flattenedEmotes, ...emotes],
+        []
+      );
+      return flattenedEmotes;
+    } catch (err: any) {
+      return [];
     }
+  }
 
-    public async getEmotesForChannelIds(ids: string[]): Promise<EmoteDTO[]> {
-        let emotes: Emote[] = [];
-        const fetchedEmotes = ids.map(async (id) => {
-            const emotesRes = await fetch(`https://api.twitchemotes.com/api/v4/channels/${id}`);
-            const { emotes } = await emotesRes.json() as TwitchEmotesChannelRes;
-            if (emotes && emotes.length) {
-                return emotes.map(({ code, id }) => ({
-                    code,
-                    url: `https://static-cdn.jtvnw.net/emoticons/v1/${id}/3.0`,
-                }));
-            } else {
-                return [];
-            }
-        });
-        const flattenedEmotes = (await Promise.all(fetchedEmotes)).reduce((flattenedEmotes, emotes) => [...flattenedEmotes, ...emotes], []);
-        return flattenedEmotes;
+  public async getChannelId(...loginNames: string[]): Promise<string[]> {
+    if (!loginNames.length) {
+      return [];
     }
-
-    public async getChannelId(...loginNames: string[]): Promise<string[]> {
-        return await fetch(`https://api.twitch.tv/kraken/users?login=${loginNames.join(',')}`,
+    try {
+      const channelsRes = await axios.get<TTVUsersResponse>(
+        `https://api.twitch.tv/kraken/users?login=${loginNames.join(",")}`,
         {
           headers: {
-              'Authorization': `bearer ${this.accessToken}`,
-              'Accept': 'application/vnd.twitchtv.v5+json',
-              'Client-ID': this.clientId,
-          }  
-        })
-            .then(res => res.json())
-            .then((res: TTVUsersResponse) => res.users.map((u) => u._id));
+            Authorization: `bearer ${this.accessToken}`,
+            Accept: "application/vnd.twitchtv.v5+json",
+            "Client-ID": this.clientId,
+          },
+        }
+      );
+      const channels = channelsRes.data;
+      return channels.users.map((u) => u._id);
+    } catch (err: any) {
+      return [];
     }
-    
-    private getAccessToken(): void {
-        fetch(`https://id.twitch.tv/oauth2/token?client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=client_credentials`, { method: 'POST' })
-            .then((res) => res.json())
-            .then((res: TTVAuthRes) => this.accessToken = res.access_token);
-        
+  }
+
+  private async setAccessToken(): Promise<void> {
+    try {
+      const accessTokenRes = await axios.post<TTVAuthRes>(
+        `https://id.twitch.tv/oauth2/token?client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=client_credentials`
+      );
+
+      const accessToken = accessTokenRes.data;
+      this.accessToken = accessToken.access_token;
+    } catch (err: any) {
+      console.log(err.response.data);
     }
+  }
 }

@@ -2,12 +2,12 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Emote {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @Column()
-    code: string;
+  @Column()
+  code!: string;
 
-    @Column()
-    url: string;
+  @Column()
+  url!: string;
 }

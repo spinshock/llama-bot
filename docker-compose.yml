@@ -1,0 +1,60 @@
+version: "3.9" # optional since v1.27.0
+
+services:
+  llama-bot:
+    container_name: llama-bot
+    hostname: llama-bot
+    build:
+      context: ./llama-bot
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - .llama-bot:/app
+    environment:
+      NODE_ENV: ${BOT_NODE_ENV}
+      DISCORD_TOKEN: ${BOT_DISCORD_TOKEN}
+      TTV_CLIENT_ID: ${BOT_TTV_CLIENT_ID}
+      TTV_CLIENT_SECRET: ${BOT_TTV_CLIENT_SECRET}
+  llama-bot-api:
+    container_name: llama-bot-api
+    hostname: llama-bot-api
+    build:
+      context: ./llama-bot-api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./llama-bot-api/src/:/usr/src/app/
+      - /usr/src/app/node_modules
+    environment:
+      NODE_ENV: ${API_NODE_ENV}
+    restart: unless-stopped
+    depends_on:
+      - llama-bot-db
+  llama-bot-db:
+    container_name: llama-bot-db
+    hostname: llama-bot-db
+    image: postgres
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 54321:5432
+    restart: unless-stopped
+  client:
+    container_name: llama-bot-client
+    hostname: llama-bot-client
+    build:
+      context: ./llama-bot-client
+      dockerfile: Dockerfile
+    ports:
+      - 4200:80
+    # volumes:
+    #   - ./llama-bot-client/src/test:/usr/share/nginx/html
+    restart: always
+    depends_on:
+      - llama-bot-api

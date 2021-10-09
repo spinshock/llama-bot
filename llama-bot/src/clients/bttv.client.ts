@@ -1,20 +1,17 @@
-import { EmoteDTO } from "../api/models/emote.dto";
-import { BTTVEmotesRes, BTTVTopEmote } from "./models/bttv/bttv-emotes.model";
-import { TTVEmotesRes } from "./models/twitch-emotes/twitch-emotes.model";
+import axios from "axios";
+import { Emote } from "../models/emote";
+import { BTTVEmotesRes, BTTVTopEmote } from "../models/bttv/bttv-emotes.model";
+import { TTVEmotesRes } from "../models/twitch-emotes/twitch-emotes.model";
 
 export class BetterTwitchTVClient {
   private static readonly EMOTES_URL_TEMPLATE =
     "//cdn.betterttv.net/emote/{{id}}/{{image}}.gif";
 
-  static async getBTTVEmotesFromChannels(channel: string): Promise<EmoteDTO[]> {
-    const fetchedEmotesRes = await fetch(
-      `https://api.betterttv.net/2/channels/${channel}?limit=100`
-    );
-    const fetchedEmotes = (
-      (await fetchedEmotesRes.json()) as {
-        emotes: TTVEmotesRes[];
-      }
-    ).emotes;
+  static async getBTTVEmotesFromChannels(channel: string): Promise<Emote[]> {
+    const fetchedEmotesRes = await axios.get<{
+      emotes: TTVEmotesRes[];
+    }>(`https://api.betterttv.net/2/channels/${channel}?limit=100`);
+    const fetchedEmotes = fetchedEmotesRes.data.emotes;
     if (fetchedEmotes) {
       return fetchedEmotes.map(({ id, code }) => ({
         code,
@@ -24,12 +21,11 @@ export class BetterTwitchTVClient {
     return [];
   }
 
-  static async getBTTVDefaultEmotes(): Promise<EmoteDTO[]> {
-    const fetchedEmotesRes = await fetch(
+  static async getBTTVDefaultEmotes(): Promise<Emote[]> {
+    const fetchedEmotesRes = await axios.get<BTTVEmotesRes>(
       `https://api.betterttv.net/2/emotes?limit=100`
     );
-    const fetchedEmotes = ((await fetchedEmotesRes.json()) as BTTVEmotesRes)
-      .emotes;
+    const fetchedEmotes = fetchedEmotesRes.data.emotes;
     if (fetchedEmotes) {
       return fetchedEmotes.map(({ id, code }) => ({
         code,
@@ -44,10 +40,10 @@ export class BetterTwitchTVClient {
     offset = 0,
     emotes: { id: string; code: string }[] = []
   ): Promise<any> {
-    const fetchedEmotesRes = await fetch(
+    const fetchedEmotesRes = await axios.get<BTTVTopEmote[]>(
       `https://api.betterttv.net/3/emotes/shared/top?offset=${offset}&limit=100`
     );
-    const fetchedEmotes = (await fetchedEmotesRes.json()) as BTTVTopEmote[];
+    const fetchedEmotes = fetchedEmotesRes.data;
     const mappedEmotes = fetchedEmotes.map((emote) => emote.emote);
 
     if (offset <= maxOffset && fetchedEmotes.length) {

@@ -2,7 +2,7 @@ import express from "express";
 import {
   getEmoteByCode,
   getEmotes,
-} from "../../database/repositories/emotes.repository";
+} from "../database/repositories/emotes.repository";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get("/:code", async (req, res) => {
   return res.send({ emote });
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (_req, res) => {
   const emotes = await getEmotes();
 
   return res.send({ emotes });
