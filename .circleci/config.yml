@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  doctl: digitalocean/cli@1.0.0
+
 executors:
   llama-bot-docker-executor:
     docker:
@@ -54,15 +57,21 @@ jobs:
           name: Test
           command: npm run test
   llama-bot-build-publish:
-    machine: true
+    docker:
+      - image: cimg/node:14.17.6
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+      - doctl/initialize:
+          digitalocean-access-token: DO_TOKEN
+      - doctl/install:
       - run:
           name: Build docker image
           command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1 llama-bot/.
       - run:
           name: Log in to DO Container Registry
-          command: docker run --rm --interactive --tty --env=DIGITALOCEAN_ACCESS_TOKEN=$DO_TOKEN digitalocean/doctl registry login
+          command: doctl registry login
       - run:
           name: Push image to Digital Ocean Container Registry
           command: docker push registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1
