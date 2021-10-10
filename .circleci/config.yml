@@ -54,6 +54,7 @@ jobs:
           name: Test
           command: npm run test
   llama-bot-build-publish:
+    machine: true
     steps:
       - checkout
       - run:
