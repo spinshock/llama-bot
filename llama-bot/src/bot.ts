@@ -76,8 +76,6 @@ discordClient.on("ready", () => {
 });
 
 export const startDiscordBot = () => {
-  console.log(process.env);
-
   if (!process.env.DISCORD_TOKEN) {
     throw Error("No discord token provided.");
   }

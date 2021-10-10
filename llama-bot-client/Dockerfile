@@ -23,3 +23,10 @@ LABEL maintainer="Yavor Filipov <yavorfilipov9@gmail.com> (@spinshock)"
 
 COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
+
+# PORT to be used by nginx
+ARG PORT
+# Url to API in reverse proxy
+ARG API_URL
+
+CMD sed -i -e 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/default.conf && sed -i -e 's/$API_URL/'"$API_URL"'/g' /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'

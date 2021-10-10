@@ -26,12 +26,15 @@ WORKDIR /app
 COPY --from=build --chown=node:node app/dist ./dist
 COPY --from=build --chown=node:node app/node_modules ./node_modules
 
-EXPOSE 5000
+ARG PORT
+ENV PORT $PORT
 
 ARG DATABASE_URL
-ENV DATABASE_URL ${DATABASE_URL}
+ENV DATABASE_URL $DATABASE_URL
 
 ARG NODE_ENV
-ENV NODE_ENV ${NODE_ENV}
+ENV NODE_ENV $NODE_ENV
+
+EXPOSE $PORT
 
 CMD [ "node", "--unhandled-rejections=strict", "dist/index.js" ]

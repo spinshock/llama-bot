@@ -7,27 +7,19 @@ services:
     build:
       context: ./llama-bot
       dockerfile: Dockerfile
+    env_file: llama-bot/.env
     # volumes:
     #   - .llama-bot:/app
-    environment:
-      NODE_ENV: ${NODE_ENV}
-      DISCORD_TOKEN: ${DISCORD_TOKEN}
-      TTV_CLIENT_ID: ${TTV_CLIENT_ID}
-      TTV_CLIENT_SECRET: ${TTV_CLIENT_SECRET}
-      DATABASE_URL: ${DATABASE_URL}
   llama-bot-api:
     container_name: llama-bot-api
     hostname: llama-bot-api
     build:
       context: ./llama-bot-api
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./llama-bot-api/src/:/usr/src/app/
-      - /usr/src/app/node_modules
-    environment:
-      NODE_ENV: ${API_NODE_ENV}
+    # volumes:
+    #   - ./llama-bot-api/src/:/usr/src/app/
+    #   - /usr/src/app/node_modules
+    env_file: llama-bot-api/.env
     restart: unless-stopped
     depends_on:
       - llama-bot-db
@@ -44,16 +36,15 @@ services:
     ports:
       - 54321:5432
     restart: unless-stopped
-  client:
+  llama-bot-client:
     container_name: llama-bot-client
     hostname: llama-bot-client
     build:
       context: ./llama-bot-client
       dockerfile: Dockerfile
+    env_file: llama-bot-client/.env
     ports:
       - 4200:80
-    # volumes:
-    #   - ./llama-bot-client/src/test:/usr/share/nginx/html
     restart: always
     depends_on:
       - llama-bot-api
