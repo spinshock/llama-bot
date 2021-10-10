@@ -128,15 +128,15 @@ workflows:
     jobs:
       - llama-bot-install
       - llama-bot-lint:
-        requires:
-          - llama-bot-install
+          requires:
+            - llama-bot-install
       - llama-bot-test:
-        requires:
-          - llama-bot-install
+          requires:
+            - llama-bot-install
       - llama-bot-build-publish:
-        requires:
-          - llama-bot-lint
-          - llama-bot-test
+          requires:
+            - llama-bot-lint
+            - llama-bot-test
   # llama-bot-api:
   #   jobs:
   #     - llama-bot-api-lint
