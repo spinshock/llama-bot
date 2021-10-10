@@ -70,8 +70,9 @@ jobs:
           name: Tag image
           command: docker tag llama-bot \
                   registry.digitalocean.com/llama-bot-discord/llama-bot:${{ .Environment.CIRCLE_SHA1 }}
-      - name: Push image to DO Container Registry
-        run: docker push registry.digitalocean.com/llama-bot-discord/llama-bot:${{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Push image to DO Container Registry
+          command: docker push registry.digitalocean.com/llama-bot-discord/llama-bot:${{ .Environment.CIRCLE_SHA1 }}
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
