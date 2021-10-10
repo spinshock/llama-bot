@@ -133,7 +133,7 @@ workflows:
       # - llama-bot-test:
       #     requires:
       #       - llama-bot-install
-      - llama-bot-build-publish:
+      - llama-bot-build-publish
           # requires:
           #   - llama-bot-lint
           #   - llama-bot-test
