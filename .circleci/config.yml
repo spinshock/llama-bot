@@ -41,24 +41,27 @@ jobs:
     steps:
       - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
-      # - run:
-      #     name: Lint
-      #     command: npm run lint
+      - run:
+          name: Lint
+          command: npm run lint
   llama-bot-test:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
     steps:
       - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
-      # - run:
-      #     name: Test
-      #     command: npm run test
+      - run:
+          name: Test
+          command: npm run test
   llama-bot-build-publish:
     executor: llama-bot-docker-executor
     working_directory: llama-bot
     steps:
       - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Debug
+          command: ls
       - run:
           name: Build docker image
           command: docker build -t llama-bot .
@@ -127,16 +130,18 @@ workflows:
   llama-bot:
     jobs:
       - llama-bot-install
-      - llama-bot-lint:
-          requires:
-            - llama-bot-install
-      - llama-bot-test:
-          requires:
-            - llama-bot-install
+      # - llama-bot-lint:
+      #     requires:
+      #       - llama-bot-install
+      # - llama-bot-test:
+      #     requires:
+      #       - llama-bot-install
       - llama-bot-build-publish:
           requires:
-            - llama-bot-lint
-            - llama-bot-test
+            - llama-bot-install
+          # requires:
+          #   - llama-bot-lint
+          #   - llama-bot-test
   # llama-bot-api:
   #   jobs:
   #     - llama-bot-api-lint
