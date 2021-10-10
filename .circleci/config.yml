@@ -66,13 +66,13 @@ jobs:
           version: 19.03.13
       - run:
           name: Build docker image
-          command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:{{ .Environment.CIRCLE_SHA1 }} .
+          command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1 .
       - run:
           name: Log in to DO Container Registry
           command: docker run --rm --interactive --tty --env=DIGITALOCEAN_ACCESS_TOKEN=$DO_TOKEN digitalocean/doctl registry login
       - run:
           name: Push image to DO Container Registry
-          command: docker push registry.digitalocean.com/llama-bot-discord/llama-bot:${{ .Environment.CIRCLE_SHA1 }}
+          command: docker push registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
