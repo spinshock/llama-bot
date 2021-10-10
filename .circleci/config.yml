@@ -54,19 +54,11 @@ jobs:
           name: Test
           command: npm run test
   llama-bot-build-publish:
-    executor: llama-bot-docker-executor
-    working_directory: llama-bot
     steps:
-      - restore_cache:
-          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Debug
-          command: ls
-      - setup_remote_docker:
-          version: 19.03.13
+      - checkout
       - run:
           name: Build docker image
-          command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1 ./../llama-bot-discord/llama-bot/.
+          command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1 llama-bot/.
       - run:
           name: Log in to DO Container Registry
           command: docker run --rm --interactive --tty --env=DIGITALOCEAN_ACCESS_TOKEN=$DO_TOKEN digitalocean/doctl registry login
@@ -126,16 +118,14 @@ workflows:
   version: 2
   llama-bot:
     jobs:
-      - llama-bot-install
+      # - llama-bot-install
       # - llama-bot-lint:
       #     requires:
       #       - llama-bot-install
       # - llama-bot-test:
       #     requires:
       #       - llama-bot-install
-      - llama-bot-build-publish:
-          requires:
-            - llama-bot-install
+      - llama-bot-build-publish
           # requires:
           #   - llama-bot-lint
           #   - llama-bot-test
