@@ -12,7 +12,7 @@ executors:
     docker:
       - image: cimg/node:14.17.6
     working_directory: ~/llama-bot-discord/llama-bot-api
-      
+
 jobs:
   # llama-bot
   llama-bot-install:
@@ -60,19 +60,19 @@ jobs:
     docker:
       - image: cimg/node:14.17.6
     environment:
-			LLAMA_BOT_IMG_TAG: registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1
+      LLAMA_BOT_IMG_TAG: registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1
     steps:
-			- checkout
+      - checkout
       - setup_remote_docker
       - run:
-      	name: Build docker image
-				command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
+        name: Build docker image
+        command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
       - run:
-				name: Log in to DO Container Registry
-				command: doctl registry login
+        name: Log in to DO Container Registry
+        command: doctl registry login
       - run:
-				name: Push image to Digital Ocean Container Registry
-				command: docker push $LLAMA_BOT_IMG_TAG
+        name: Push image to Digital Ocean Container Registry
+        command: docker push $LLAMA_BOT_IMG_TAG
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
