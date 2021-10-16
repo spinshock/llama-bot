@@ -61,9 +61,9 @@ jobs:
       - image: cimg/node:14.17.6
     steps:
       - checkout
-      - doctl/initialize:
-          digitalocean-access-token: DO_TOKEN
-      - doctl/install:
+      # - doctl/initialize:
+      #     digitalocean-access-token: DO_TOKEN
+      # - doctl/install:
       - run:
           name: Build docker image
           command: docker build -t registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1 llama-bot/.
@@ -133,6 +133,9 @@ workflows:
       # - llama-bot-test:
       #     requires:
       #       - llama-bot-install
+      - doctl/install_and_initialize_cli:
+          context: myContext
+          executor: doctl/default
       - llama-bot-build-publish
           # requires:
           #   - llama-bot-lint
