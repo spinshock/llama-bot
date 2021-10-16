@@ -60,8 +60,12 @@ jobs:
     docker:
       - image: cimg/node:14.17.6
     environment:
-      LLAMA_BOT_IMG_TAG: registry.digitalocean.com/llama-bot-discord/llama-bot:${CIRCLE_SHA1}
     steps:
+      - run:
+            name: Define Environment Variable LLAMA_BOT_IMG_TAG
+            command: |
+              echo 'export LLAMA_BOT_IMG_TAG=registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1' >> $BASH_ENV
+              source $BASH_ENV
       - checkout
       - setup_remote_docker
       - run:
