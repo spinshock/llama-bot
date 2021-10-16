@@ -61,6 +61,9 @@ jobs:
       - image: cimg/node:14.17.6
     environment:
     steps:
+      - doctl/install
+      - doctl/initialize:
+          digitalocean-access-token: DO_TOKEN
       - run:
             name: Define Environment Variable LLAMA_BOT_IMG_TAG
             command: |
@@ -134,9 +137,6 @@ workflows:
       # - llama-bot-test:
       #     requires:
       #       - llama-bot-install
-      - doctl/install_and_initialize_cli:
-          executor: doctl/default
-          digitalocean-access-token: DO_TOKEN
       - llama-bot-build-publish:
           requires:
             - doctl/install_and_initialize_cli
