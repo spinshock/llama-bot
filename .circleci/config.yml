@@ -65,14 +65,14 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: Build docker image
-        command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
+          name: Build docker image
+          command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
       - run:
-        name: Log in to DO Container Registry
-        command: doctl registry login
+          name: Log in to DO Container Registry
+          command: doctl registry login
       - run:
-        name: Push image to Digital Ocean Container Registry
-        command: docker push $LLAMA_BOT_IMG_TAG
+          name: Push image to Digital Ocean Container Registry
+          command: docker push $LLAMA_BOT_IMG_TAG
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
