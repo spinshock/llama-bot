@@ -136,6 +136,8 @@ workflows:
       - doctl/install_and_initialize_cli:
           executor: doctl/default
       - llama-bot-build-publish
+          requires:
+            - doctl/install_and_initialize_cli
           # requires:
           #   - llama-bot-lint
           #   - llama-bot-test
