@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  doctl: digitalocean/cli@0.1.1
+  doctl: digitalocean/cli@1.0.0
 
 executors:
   llama-bot-docker-executor:
@@ -134,7 +134,6 @@ workflows:
       #     requires:
       #       - llama-bot-install
       - doctl/install_and_initialize_cli:
-          context: myContext
           executor: doctl/default
       - llama-bot-build-publish
           # requires:
