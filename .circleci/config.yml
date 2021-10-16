@@ -60,7 +60,7 @@ jobs:
     docker:
       - image: cimg/node:14.17.6
     environment:
-      LLAMA_BOT_IMG_TAG: registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1
+      LLAMA_BOT_IMG_TAG: registry.digitalocean.com/llama-bot-discord/llama-bot:${CIRCLE_SHA1}
     steps:
       - checkout
       - setup_remote_docker
