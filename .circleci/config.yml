@@ -135,6 +135,7 @@ workflows:
       #       - llama-bot-install
       - doctl/install_and_initialize_cli:
           executor: doctl/default
+          digitalocean-access-token: DO_TOKEN
       # - llama-bot-build-publish
           # requires:
           #   - llama-bot-lint
