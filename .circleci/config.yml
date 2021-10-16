@@ -61,16 +61,19 @@ jobs:
       - image: cimg/node:14.17.6
     environment:
     steps:
-      - doctl/install
-      - doctl/initialize:
-          digitalocean-access-token: DO_TOKEN
+      - setup_remote_docker
       - run:
             name: Define Environment Variable LLAMA_BOT_IMG_TAG
             command: |
               echo 'export LLAMA_BOT_IMG_TAG=registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1' >> $BASH_ENV
               source $BASH_ENV
       - checkout
-      - setup_remote_docker
+      - doctl/install
+      - doctl/initialize:
+          digitalocean-access-token: DO_TOKEN
+      - run:
+          name: Auth docker with doctl
+          command: doctl registry login
       - run:
           name: Build docker image
           command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
