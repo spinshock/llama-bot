@@ -127,14 +127,19 @@ workflows:
           requires:
             - llama-bot-lint
             - llama-bot-test
-  # llama-bot-api:
-  #   jobs:
-  #     - llama-bot-api-lint
-  #     - llama-bot-api-test
-  #     - llama-bot-api-build-publish:
-  #       requires:
-  #         - llama-bot-api-lint
-  #         - llama-bot-api-test
+  llama-bot-api:
+    jobs:
+      - llama-bot-api-install
+      - llama-bot-api-lint:
+          requires:
+              - llama-bot-api-install
+      - llama-bot-api-test:
+          requires:
+              - llama-bot-api-install
+      - llama-bot-api-deploy:
+          requires:
+            - llama-bot-api-lint
+            - llama-bot-api-test
   # llama-bot-client:
   #   jobs:
   #     - llama-bot-api-lint
