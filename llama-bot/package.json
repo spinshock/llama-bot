@@ -6,6 +6,7 @@
     "start": "ts-node -r dotenv/config ./src/bot.ts",
     "start:watch": "nodemon",
     "build": "tsc",
+    "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts"
   },
   "repository": {
@@ -40,6 +41,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-testing-library": "^3.9.2",
+    "jest": "^27.3.1",
     "tsc-watch": "^4.2.9",
     "typescript": "^4.4.3"
   }
