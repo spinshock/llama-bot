@@ -164,10 +164,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
           ```bash
           dokku builder-dockerfile:set <api-app-name> dockerfile-path
           ```
-    * Set build arguments for Dockerfile
-        ```bash
-        dokku docker-options:add <api-app-name> build '--build-arg PORT=8080'
-        ```
     * Set env variables for the api
         * NODE_ENV
         ```bash
