@@ -32,7 +32,6 @@ const discordClient = new Discord.Client({
     activities: [
       {
         name: "https://llama-bot-discord.herokuapp.com/",
-        type: "CUSTOM",
       },
     ],
   },

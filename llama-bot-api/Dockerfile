@@ -26,14 +26,13 @@ WORKDIR /app
 COPY --from=build --chown=node:node app/dist ./dist
 COPY --from=build --chown=node:node app/node_modules ./node_modules
 
-ARG PORT
-ENV PORT $PORT
+ARG NODE_ENV=production
+ENV NODE_ENV ${NODE_ENV}
 
-ARG DATABASE_URL
-ENV DATABASE_URL $DATABASE_URL
+ARG PORT=$PORT
+ENV PORT ${PORT}
 
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+ENV DATABASE_URL=${DATABASE_URL}
 
 EXPOSE $PORT
 

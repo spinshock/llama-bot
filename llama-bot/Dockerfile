@@ -32,7 +32,6 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node ./config/ ./config/
 COPY --chown=node:node ./assets/ ./assets/
 
-
 ARG NODE_ENV=production
 ENV NODE_ENV ${NODE_ENV}
 

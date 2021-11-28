@@ -149,7 +149,48 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       ```bash
       git push <dokku-remote> <local-branch-to-be-deployed>:master
       ```
-
+1. API
+    * Create the app for the API **in dokku**
+      ```bash
+      dokku apps:create <api-app-name>
+      ```
+    * Set builder to Dockerfile **in dokku**
+      ```bash
+      ## llama-bot-api is the subdir where the Dockerfile for the api is located
+      ## Keep in mind dockerfile-path should be default when changing build-dir
+      dokku builder:set <api-app-name> build-dir llama-bot-api
+      ```
+        * OPTIONAL: Set `dockerfile-path` to default ("Dockerfile") when changing the build-dir 
+          ```bash
+          dokku builder-dockerfile:set <api-app-name> dockerfile-path
+          ```
+    * Set env variables for the bot
+        * NODE_ENV
+        ```bash
+        ## NODE_ENV can be production or development
+        dokku config:set <api-app-name> NODE_ENV=<environment>
+        ```
+        * DATABASE_URL **(You need to create postgres db service in dokku first!)**
+        ```bash
+        ## Do this once as the same db is shared between bot and api
+        dokku postgres:create <postgres-name-in-dokku>
+        ```
+        ```bash
+        dokku postgres:link <postgres-name-in-dokku> <api-app-name>
+        ```
+    * Adjust dokku scaling to spin up worker only instead of web (no proxy expose for the container)
+      ```bash
+      dokku ps:scale <api-app-name> web=0 worker=1
+      ```
+    * Push branch to dokku for deploy
+      ```bash
+      ## dokku-host=llama-bot-discord.com
+      ## dokku-remote is the alias of the remote for dokku deployments / dokku or dokku-dev by default
+      git remote add <dokku-remote> dokku@<dokku-host>:<api-app-name>
+      ```
+      ```bash
+      git push <dokku-remote> <local-branch-to-be-deployed>:master
+      ```
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/spinshock/llama-bot-discord/blob/main/LICENSE.md) for more information.
