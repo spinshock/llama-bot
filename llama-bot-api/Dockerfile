@@ -1,4 +1,4 @@
-FROM node:14.17.6-alpine AS build
+FROM node:16.13.0-alpine AS build
 
 WORKDIR /
 RUN mkdir -p /app
@@ -16,7 +16,7 @@ COPY --chown=node:node ./src/ ./src/
 
 RUN npm run build
 
-FROM node:14.17.6-alpine
+FROM node:16.13.0-alpine
 
 LABEL maintainer="Yavor Filipov <yavorfilipov9@gmail.com> (@spinshock)"
 
