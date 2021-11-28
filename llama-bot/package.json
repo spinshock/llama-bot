@@ -5,7 +5,8 @@
   "scripts": {
     "start": "ts-node -r dotenv/config ./src/bot.ts",
     "start:watch": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,7 @@
     "ws": "^8.2.2"
   },
   "devDependencies": {
-    "@types/node": "^14.14.31",
+    "@types/node": "^14.17.34",
     "@types/pg": "^8.6.1",
     "@types/validator": "^13.6.3",
     "@types/ws": "^7.4.7",

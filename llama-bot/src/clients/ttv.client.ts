@@ -39,7 +39,7 @@ export class TTVClient {
         []
       );
       return flattenedEmotes;
-    } catch (err: any) {
+    } catch (err: unknown) {
       return [];
     }
   }
@@ -61,7 +61,7 @@ export class TTVClient {
       );
       const channels = channelsRes.data;
       return channels.users.map((u) => u._id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       return [];
     }
   }
@@ -74,8 +74,8 @@ export class TTVClient {
 
       const accessToken = accessTokenRes.data;
       this.accessToken = accessToken.access_token;
-    } catch (err: any) {
-      console.log(err.response.data);
+    } catch (err: unknown) {
+      console.log(err);
     }
   }
 }

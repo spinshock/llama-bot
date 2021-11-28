@@ -2,15 +2,17 @@ import Discord, { Intents } from "discord.js";
 import { BetterTwitchTVClient } from "./clients/bttv.client";
 import { TwitchEmotesClient } from "./clients/twitch-emotes.client";
 import { TTVClient } from "./clients/ttv.client";
+import {
+  DISCORD_TOKEN,
+  TTV_CLIENT_ID,
+  TTV_CLIENT_SECRET,
+} from "./config/config";
 
-let ttv_client_id = process.env.TTV_CLIENT_ID;
-let ttv_client_secret = process.env.TTV_CLIENT_SECRET;
-
-if (!ttv_client_id || !ttv_client_secret) {
+if (!TTV_CLIENT_ID || !TTV_CLIENT_SECRET) {
   throw Error("No ttv credentials provided");
 }
 
-const ttvClient = new TTVClient(ttv_client_id, ttv_client_secret);
+const ttvClient = new TTVClient(TTV_CLIENT_ID, TTV_CLIENT_SECRET);
 
 const twitchEmotesClient = new TwitchEmotesClient(ttvClient);
 
@@ -75,11 +77,11 @@ discordClient.on("ready", () => {
   console.log("Discord bot ready.");
 });
 
-export const startDiscordBot = () => {
-  if (!process.env.DISCORD_TOKEN) {
+export const startDiscordBot = (): void => {
+  if (!DISCORD_TOKEN) {
     throw Error("No discord token provided.");
   }
-  discordClient.login(process.env.DISCORD_TOKEN);
+  discordClient.login(DISCORD_TOKEN);
   console.log("Discord bot started.");
 };
 

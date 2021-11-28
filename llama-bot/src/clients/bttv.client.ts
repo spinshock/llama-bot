@@ -39,7 +39,13 @@ export class BetterTwitchTVClient {
     maxOffset: number,
     offset = 0,
     emotes: { id: string; code: string }[] = []
-  ): Promise<any> {
+  ): Promise<
+    {
+      id?: string;
+      url?: string;
+      code: string;
+    }[]
+  > {
     const fetchedEmotesRes = await axios.get<BTTVTopEmote[]>(
       `https://api.betterttv.net/3/emotes/shared/top?offset=${offset}&limit=100`
     );
