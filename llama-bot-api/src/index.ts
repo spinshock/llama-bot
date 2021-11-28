@@ -4,7 +4,7 @@ import express, { Application } from "express";
 import Router from "./routes";
 import { startDb } from "./database/db";
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 const app: Application = express();
 

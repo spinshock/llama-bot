@@ -34,6 +34,6 @@ ENV PORT=${PORT}
 
 ENV DATABASE_URL=${DATABASE_URL}
 
-EXPOSE $PORT
+EXPOSE ${PORT}
 
 CMD [ "node", "--unhandled-rejections=strict", "dist/index.js" ]
