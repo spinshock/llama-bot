@@ -29,11 +29,8 @@ COPY --from=build --chown=node:node app/node_modules ./node_modules
 ARG NODE_ENV=production
 ENV NODE_ENV ${NODE_ENV}
 
-ARG PORT=8080
-ENV PORT=${PORT}
-
 ENV DATABASE_URL=${DATABASE_URL}
 
-EXPOSE ${PORT}
+EXPOSE 8080
 
 CMD [ "node", "--unhandled-rejections=strict", "dist/index.js" ]
