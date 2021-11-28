@@ -2,11 +2,10 @@ import Discord, { Intents } from "discord.js";
 import { BetterTwitchTVClient } from "./clients/bttv.client";
 import { TwitchEmotesClient } from "./clients/twitch-emotes.client";
 import { TTVClient } from "./clients/ttv.client";
-import {
-  DISCORD_TOKEN,
-  TTV_CLIENT_ID,
-  TTV_CLIENT_SECRET,
-} from "./config/config";
+
+const TTV_CLIENT_ID = process.env.TTV_CLIENT_ID;
+const TTV_CLIENT_SECRET = process.env.TTV_CLIENT_SECRET;
+const DISCORD_TOKEN = process.env.DISCORD_TOKEN;
 
 if (!TTV_CLIENT_ID || !TTV_CLIENT_SECRET) {
   throw Error("No ttv credentials provided");
