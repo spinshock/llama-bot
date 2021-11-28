@@ -46,7 +46,6 @@ jobs:
           command: npm run lint
   llama-bot-test:
     executor: llama-bot-docker-executor
-    working_directory: llama-bot
     steps:
       - restore_cache:
           key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
