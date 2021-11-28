@@ -164,7 +164,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
           ```bash
           dokku builder-dockerfile:set <api-app-name> dockerfile-path
           ```
-    * Set env variables for the bot
+    * Set build arguments for Dockerfile
+        ```bash
+        dokku docker-options:add <api-app-name> build '--build-arg PORT=8080'
+        ```
+    * Set env variables for the api
         * NODE_ENV
         ```bash
         ## NODE_ENV can be production or development
@@ -178,10 +182,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
         ```bash
         dokku postgres:link <postgres-name-in-dokku> <api-app-name>
         ```
-    * Adjust dokku scaling to spin up worker only instead of web (no proxy expose for the container)
-      ```bash
-      dokku ps:scale <api-app-name> web=0 worker=1
-      ```
     * Push branch to dokku for deploy
       ```bash
       ## dokku-host=llama-bot-discord.com
