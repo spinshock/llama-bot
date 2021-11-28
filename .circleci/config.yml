@@ -1,16 +1,13 @@
 version: 2.1
 
-orbs:
-  doctl: digitalocean/cli@0.1.1
-
 executors:
   llama-bot-docker-executor:
     docker:
-      - image: cimg/node:14.17.6
+      - image: cimg/node:16.13.0
     working_directory: ~/llama-bot-discord/llama-bot
   llama-bot-api-docker-executor:
     docker:
-      - image: cimg/node:14.17.6
+      - image: cimg/node:16.13.0
     working_directory: ~/llama-bot-discord/llama-bot-api
 
 jobs:
@@ -56,30 +53,18 @@ jobs:
       - run:
           name: Test
           command: npm run test
-  llama-bot-build-publish:
-    docker:
-      - image: cimg/node:14.17.6
-    environment:
+  llama-bot-deploy:
+    machine:
+       enabled: true
     steps:
       - setup_remote_docker
-      - run:
-            name: Define Environment Variable LLAMA_BOT_IMG_TAG
-            command: |
-              echo 'export LLAMA_BOT_IMG_TAG=registry.digitalocean.com/llama-bot-discord/llama-bot:$CIRCLE_SHA1' >> $BASH_ENV
-              source $BASH_ENV
       - checkout
-      - doctl/install
-      - doctl/initialize:
-          digitalocean-access-token: DO_TOKEN
       - run:
-          name: Auth docker with doctl
-          command: doctl registry login
+          name: Deploy master to prod
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord master:master; else echo "Skipped"; fi
       - run:
-          name: Build docker image
-          command: docker build -t $LLAMA_BOT_IMG_TAG llama-bot/.
-      - run:
-          name: Push image to Digital Ocean Container Registry
-          command: docker push $LLAMA_BOT_IMG_TAG
+          name: Deploy PR to dev
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-dev; else echo "Skipped"; fi
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
@@ -133,18 +118,17 @@ workflows:
   version: 2
   llama-bot:
     jobs:
-      # - llama-bot-install
-      # - llama-bot-lint:
-      #     requires:
-      #       - llama-bot-install
-      # - llama-bot-test:
-      #     requires:
-      #       - llama-bot-install
-      - llama-bot-build-publish
-      # - llama-bot-build-publish
-          # requires:
-          #   - llama-bot-lint
-          #   - llama-bot-test
+      - llama-bot-install
+      - llama-bot-lint:
+          requires:
+            - llama-bot-install
+      - llama-bot-test:
+          requires:
+            - llama-bot-install
+      - llama-bot-deploy:
+          requires:
+            - llama-bot-lint
+            - llama-bot-test
   # llama-bot-api:
   #   jobs:
   #     - llama-bot-api-lint

@@ -94,6 +94,62 @@ Use this space to show useful examples of how a project can be used. Additional 
 
 _For more examples, please refer to the [Documentation](https://example.com)_
 
+## Deployment with Dokku
+1. Bot
+    * Create the app for the bot **in dokku**
+      ```bash
+      dokku apps:create <bot-app-name>
+      ```
+    * Set builder to Dockerfile **in dokku**
+      ```bash
+      ## llama-bot is the subdir where the Dockerfile for the bot is located
+      ## Keep in mind dockerfile-path should be default when changing build-dir
+      dokku builder:set <bot-app-name> build-dir llama-bot
+      ```
+        * OPTIONAL: Set `dockerfile-path` to default ("Dockerfile") when changing the build-dir 
+          ```bash
+          dokku builder-dockerfile:set <bot-app-name> dockerfile-path
+          ```
+    * Set env variables for the bot
+        * NODE_ENV
+        ```bash
+        ## NODE_ENV can be production or development
+        dokku config:set <bot-app-name> NODE_ENV=<environment>
+        ```
+        * DISCORD_TOKEN
+        ```bash
+        dokku config:set <bot-app-name> DISCORD_TOKEN=<discord-token>
+        ```
+        * TTV_CLIENT_ID
+        ```bash
+        dokku config:set <bot-app-name> TTV_CLIENT_ID=<twitchtv-client-id>
+        ```
+        * TTV_CLIENT_SECRET
+        ```bash
+        dokku config:set <bot-app-name> TTV_CLIENT_SECRET=<twitchtv-client-secret>
+        ```
+        * DATABASE_URL **(You need to create postgres db service in dokku first!)**
+        ```bash
+        ## Do this once as the same db is shared between bot and api
+        dokku postgres:create <postgres-name-in-dokku>
+        ```
+        ```bash
+        dokku postgres:link <postgres-name-in-dokku> <bot-app-name>
+        ```
+    * Adjust dokku scaling to spin up worker only instead of web (no proxy expose for the container)
+      ```bash
+      dokku ps:scale <bot-app-name> web=0 worker=1
+      ```
+    * Push branch to dokku for deploy
+      ```bash
+      ## dokku-host=llama-bot-discord.com
+      ## dokku-remote is the alias of the remote for dokku deployments / dokku or dokku-dev by default
+      git remote add <dokku-remote> dokku@<dokku-host>:<bot-app-name>
+      ```
+      ```bash
+      git push <dokku-remote> <local-branch-to-be-deployed>:master
+      ```
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/spinshock/llama-bot-discord/blob/main/LICENSE.md) for more information.
