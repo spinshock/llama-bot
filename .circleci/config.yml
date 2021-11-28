@@ -98,13 +98,12 @@ jobs:
           command: npm run lint
   llama-bot-api-test:
     executor: llama-bot-api-docker-executor
-    working_directory: llama-bot-api
     steps:
       - restore_cache:
           key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
       - run:
-          name: Build
-          command: npm build
+          name: Test
+          command: npm run test
   llama-bot-api-deploy:
     machine:
        enabled: true
