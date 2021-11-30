@@ -184,12 +184,20 @@ _For more examples, please refer to the [Documentation](https://example.com)_
           ```
     * Adjust dokku zero downtime deployment to shutdown red(old green) container immediately
       ```bash
-      dokku config:set <bot-app-name> DOKKU_WAIT_TO_RETIRE=1
+      dokku config:set <api-app-name> DOKKU_WAIT_TO_RETIRE=1
       ```
     * Adjust dokku proxy ports (protocol:host_port:container_port) **container_port** or **8080** from the example below 
     should be the same as the port env from API dockerfile 
       ```bash
-      dokku proxy:ports-set <bot-app-name> http:80:8080
+      dokku proxy:ports-set <api-app-name> http:80:8080
+      ```
+    * Add the api app to the internal network(client-api reverse-proxy) **(you need to create the internal network once!)**
+      ```bash
+      ## OPTIONAL: Create the internal network once
+      dokku network:create <internal-network-name>
+      ```
+      ```bash
+      dokku network:set <api-app-name> initial-network <internal-network-name>
       ```
     * Push branch to dokku for deploy
       ```bash
@@ -237,6 +245,16 @@ _For more examples, please refer to the [Documentation](https://example.com)_
     should be the same as the port env from API dockerfile 
       ```bash
       dokku proxy:ports-set <client-app-name> http:80:8080
+      ```
+    * Add the client app to the internal network(client-api reverse-proxy) **(you need to create the internal network once!)**
+      ```bash
+      ## OPTIONAL: Create the internal network once
+      dokku network:create <internal-network-name>
+      ## OPTIONAL: Check if internal network exists
+      dokku network:exists <internal-network-name>
+      ```
+      ```bash
+      dokku network:set <client-app-name> initial-network <internal-network-name>
       ```
     * Push branch to dokku for deploy
       ```bash
