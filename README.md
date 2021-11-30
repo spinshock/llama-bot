@@ -140,6 +140,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       ```bash
       dokku ps:scale <bot-app-name> web=0 worker=1
       ```
+    * Adjust dokku zero downtime deployment to shutdown red(old green) container immedeately
+      ```bash
+      dokku config:set <bot-app-name> DOKKU_WAIT_TO_RETIRE=1
+      ```
     * Push branch to dokku for deploy
       ```bash
       ## dokku-host=llama-bot-discord.com
@@ -166,18 +170,27 @@ _For more examples, please refer to the [Documentation](https://example.com)_
           ```
     * Set env variables for the api
         * NODE_ENV
-        ```bash
-        ## NODE_ENV can be production or development
-        dokku config:set <api-app-name> NODE_ENV=<environment>
-        ```
+          ```bash
+          ## NODE_ENV can be production or development
+          dokku config:set <api-app-name> NODE_ENV=<environment>
+          ```
         * DATABASE_URL **(You need to create postgres db service in dokku first!)**
-        ```bash
-        ## Do this once as the same db is shared between bot and api
-        dokku postgres:create <postgres-name-in-dokku>
-        ```
-        ```bash
-        dokku postgres:link <postgres-name-in-dokku> <api-app-name>
-        ```
+          ```bash
+          ## Do this once as the same db is shared between bot and api
+          dokku postgres:create <postgres-name-in-dokku>
+          ```
+          ```bash
+          dokku postgres:link <postgres-name-in-dokku> <api-app-name>
+          ```
+    * Adjust dokku zero downtime deployment to shutdown red(old green) container immediately
+      ```bash
+      dokku config:set <bot-app-name> DOKKU_WAIT_TO_RETIRE=1
+      ```
+    * Adjust dokku proxy ports (protocol:host_port:container_port) **container_port** or **8080** from the example below 
+    should be the same as the port env from API dockerfile 
+      ```bash
+      dokku proxy:ports-set <bot-app-name> http:80:8080
+      ```
     * Push branch to dokku for deploy
       ```bash
       ## dokku-host=llama-bot-discord.com
@@ -187,6 +200,54 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       ```bash
       git push <dokku-remote> <local-branch-to-be-deployed>:master
       ```
+1. Client
+    * Create the app for the client **in dokku**
+      ```bash
+      dokku apps:create <client-app-name>
+      ```
+    * Set builder to Dockerfile **in dokku**
+      ```bash
+      ## llama-bot-client is the subdir where the Dockerfile for the client is located
+      ## Keep in mind dockerfile-path should be default when changing build-dir
+      dokku builder:set <client-app-name> build-dir llama-bot-client
+      ```
+        * OPTIONAL: Set `dockerfile-path` to default ("Dockerfile") when changing the build-dir 
+          ```bash
+          dokku builder-dockerfile:set <client-app-name> dockerfile-path
+          ```
+    * Set build arg variables for the client
+        * PORT
+          ```bash
+          ## The port that the nginx will listen on. Defaults to 80
+          dokku docker-options:add <client-app-name> build "--build-arg PORT=<port>
+          ```
+        * API_URL
+          ```bash
+          ## The domain where the api is deployed.
+          ## 
+          ## "llama-bot-discord-api-dev.llama-bot-discord.com" would resolve to the client's nginx server 
+          ## proxying api requests to http://llama-bot-discord-api-dev.llama-bot-discord.com/api
+          dokku docker-options:add <client-app-name> build "--build-arg API_URL=<domain-of-deployed-api>"
+          ```
+    * Adjust dokku zero downtime deployment to shutdown red(old green) container immediately
+      ```bash
+      dokku config:set <client-app-name> DOKKU_WAIT_TO_RETIRE=1
+      ```
+    * Adjust dokku proxy ports (protocol:host_port:container_port) **container_port** or **8080** from the example below 
+    should be the same as the port env from API dockerfile 
+      ```bash
+      dokku proxy:ports-set <client-app-name> http:80:8080
+      ```
+    * Push branch to dokku for deploy
+      ```bash
+      ## dokku-host=llama-bot-discord.com
+      ## dokku-remote is the alias of the remote for dokku deployments / dokku or dokku-dev by default
+      git remote add <dokku-remote> dokku@<dokku-host>:<client-app-name>
+      ```
+      ```bash
+      git push <dokku-remote> <local-branch-to-be-deployed>:master
+      ```
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](https://github.com/spinshock/llama-bot-discord/blob/main/LICENSE.md) for more information.

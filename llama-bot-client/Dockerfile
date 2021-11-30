@@ -25,7 +25,7 @@ COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build /usr/share/nginx/html
 
 # PORT to be used by nginx
-ARG PORT
+ARG PORT=80
 # Url to API in reverse proxy
 ARG API_URL
 
