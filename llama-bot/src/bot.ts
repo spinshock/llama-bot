@@ -58,7 +58,7 @@ discordClient.on("message", (msg) => {
     { user: "plamen", insult: "Plamen neee A maloumen toi e programist" },
     { user: "paco", insult: "Patso da iade naa sasho huia" },
     { user: "ivan", insult: "Ivane, ko ta ibe ve brat" },
-    { user: "ivane", insult: "Ivane neponosim si" },
+    { user: "ivalmao", insult: "Ivane neponosim si" },
     { user: "facebook", insult: "facebook A laino" },
   ];
   const foundInsults = insults.filter((user) =>
