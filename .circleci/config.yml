@@ -144,14 +144,6 @@ jobs:
           key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ./
-  llama-bot-client-lint:
-    executor: llama-bot-client-docker-executor
-    steps:
-      - restore_cache:
-          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
-      - run:
-          name: Lint
-          command: npm run lint
   llama-bot-client-test:
     executor: llama-bot-client-docker-executor
     steps:
@@ -203,13 +195,9 @@ workflows:
   llama-bot-client:
     jobs:
       - llama-bot-client-install
-      - llama-bot-client-lint:
-          requires:
-              - llama-bot-client-install
       - llama-bot-client-test:
           requires:
               - llama-bot-client-install
       - llama-bot-client-deploy:
           requires:
-              - llama-bot-client-lint
               - llama-bot-client-test
