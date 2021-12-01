@@ -9,6 +9,10 @@ executors:
     docker:
       - image: cimg/node:16.13.0
     working_directory: ~/llama-bot-discord/llama-bot-api
+  llama-bot-client-docker-executor:
+    docker:
+      - image: cimg/node:16.13.0
+    working_directory: ~/llama-bot-discord/llama-bot-client
 
 jobs:
   # llama-bot
@@ -115,6 +119,58 @@ jobs:
       - run:
           name: Deploy PR to dev
           command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-api-dev; else echo "Skipped"; fi
+  # llama-bot-client
+  llama-bot-client-install:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - checkout:
+          path: ~/llama-bot-discord
+      # Try to restore dependencies from cache
+      - restore_cache:
+          keys:
+            - llama-bot-client-nodemodules-v1-{{ checksum "package-lock.json" }}
+            - llama-bot-client-nodemodules-v1-
+      - run:
+          name: Install dependencies
+          command: npm install
+      # Update dependencies cache
+      - save_cache:
+          key: llama-bot-client-nodemodules-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      # Save current workflow installed state in cache
+      # .Environment.CIRCLE_SHA1 makes it unique for each build
+      - save_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+  llama-bot-client-lint:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: npm run lint
+  llama-bot-client-test:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Test
+          command: npm run test
+  llama-bot-client-deploy:
+    machine:
+       enabled: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy master to prod
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-client master:master; else echo "Skipped"; fi
+      - run:
+          name: Deploy PR to dev
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-client-dev; else echo "Skipped"; fi
 
 workflows:
   version: 2
@@ -144,12 +200,16 @@ workflows:
           requires:
             - llama-bot-api-lint
             - llama-bot-api-test
-  # llama-bot-client:
-  #   jobs:
-  #     - llama-bot-api-lint
-  #     - llama-bot-api-test
-  #     - llama-bot-api-build
-  #     - llama-bot-api-publish:
-  #       - requires:
-  #         - llama-bot-api-test
-  #         - llama-bot-api-build
+  llama-bot-client:
+    jobs:
+      - llama-bot-client-install
+      - llama-bot-client-lint:
+          requires:
+              - llama-bot-client-install
+      - llama-bot-client-test:
+          requires:
+              - llama-bot-client-install
+      - llama-bot-client-deploy:
+        - requires:
+          - llama-bot-client-lint
+          - llama-bot-client-test
