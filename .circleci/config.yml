@@ -210,6 +210,6 @@ workflows:
           requires:
               - llama-bot-client-install
       - llama-bot-client-deploy:
-        - requires:
-          - llama-bot-client-lint
-          - llama-bot-client-test
+          requires:
+              - llama-bot-client-lint
+              - llama-bot-client-test
