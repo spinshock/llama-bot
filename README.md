@@ -144,6 +144,10 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       ```bash
       dokku config:set <bot-app-name> DOKKU_WAIT_TO_RETIRE=1
       ```
+    * Disable automatic vhost exposure in dokku. The bot is not exposing anything and cannot be interacted directly with 
+      ```bash
+      dokku proxy:disable <bot-app-name>
+      ```
     * Push branch to dokku for deploy
       ```bash
       ## dokku-host=llama-bot-discord.com
@@ -186,10 +190,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       ```bash
       dokku config:set <api-app-name> DOKKU_WAIT_TO_RETIRE=1
       ```
-    * Adjust dokku proxy ports (protocol:host_port:container_port) **container_port** or **8080** from the example below 
-    should be the same as the port env from API dockerfile 
+    * Disable automatic vhost exposure in dokku. The API is reverse proxied by the frontend nginx server 
       ```bash
-      dokku proxy:ports-set <api-app-name> http:80:8080
+      dokku proxy:disable <api-app-name>
       ```
     * Add the api app to the internal network(client-api reverse-proxy) **(you need to create the internal network once!)**
       ```bash
@@ -197,7 +200,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       dokku network:create <internal-network-name>
       ```
       ```bash
-      dokku network:set <api-app-name> initial-network <internal-network-name>
+      dokku network:set <api-app-name> attach-post-create <internal-network-name>
       ```
     * Push branch to dokku for deploy
       ```bash
@@ -231,11 +234,18 @@ _For more examples, please refer to the [Documentation](https://example.com)_
           ```
         * API_URL
           ```bash
-          ## The domain where the api is deployed.
+          ## The name of the api app in dokku with the process type concatenated by a dot"." and port .
           ## 
-          ## "llama-bot-discord-api-dev.llama-bot-discord.com" would resolve to the client's nginx server 
-          ## proxying api requests to http://llama-bot-discord-api-dev.llama-bot-discord.com/api
-          dokku docker-options:add <client-app-name> build "--build-arg API_URL=<domain-of-deployed-api>"
+          ## "llama-bot-discord-client-dev.llama-bot-discord.com/api/emotes" would resolve to the api by the client's nginx server 
+          ## proxying api requests to http://llama-bot-discord-api-dev.llama-bot-discord.com/api/emotes
+          ## 
+          ## Always prefer internal requests using reverse proxy.
+          ## api-app-name-and-port is the internal domain and port of the api container.
+          ## eg. llama-bot-discord-api-dev.web:8080
+          ## Port 8080 is default, but if it's changed during API deployment/configuration, the correct port needs to be provided here as well.
+          ## IMPORTANT: ".web" is not mistaken for ".web1" or ".web.1"
+          ## ".web" is an alias for all the scaled instances of the API app, and requests will be load balanced.
+          dokku docker-options:add <client-app-name> build "--build-arg API_URL=<api-app-name-and-port>"
           ```
     * Adjust dokku zero downtime deployment to shutdown red(old green) container immediately
       ```bash
@@ -244,6 +254,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
     * Adjust dokku proxy ports (protocol:host_port:container_port) **container_port** or **8080** from the example below 
     should be the same as the port env from API dockerfile 
       ```bash
+      ## OPTIONAL: Done automatically by the proxy in dokku
       dokku proxy:ports-set <client-app-name> http:80:8080
       ```
     * Add the client app to the internal network(client-api reverse-proxy) **(you need to create the internal network once!)**
@@ -254,7 +265,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
       dokku network:exists <internal-network-name>
       ```
       ```bash
-      dokku network:set <client-app-name> initial-network <internal-network-name>
+      dokku network:set <client-app-name> attach-post-create <internal-network-name>
       ```
     * Push branch to dokku for deploy
       ```bash
