@@ -3,15 +3,15 @@ version: 2.1
 executors:
   llama-bot-docker-executor:
     docker:
-      - image: cimg/node:16.13.0
+      - image: cimg/node:16.17.0
     working_directory: ~/llama-bot-discord/llama-bot
   llama-bot-api-docker-executor:
     docker:
-      - image: cimg/node:16.13.0
+      - image: cimg/node:16.17.0
     working_directory: ~/llama-bot-discord/llama-bot-api
   llama-bot-client-docker-executor:
     docker:
-      - image: cimg/node:16.13.0
+      - image: cimg/node:16.17.0
     working_directory: ~/llama-bot-discord/llama-bot-client
 
 jobs:
@@ -58,7 +58,7 @@ jobs:
           command: npm run test
   llama-bot-deploy:
     machine:
-       enabled: true
+      enabled: true
     steps:
       - checkout
       - run:
@@ -110,7 +110,7 @@ jobs:
           command: npm run test
   llama-bot-api-deploy:
     machine:
-       enabled: true
+      enabled: true
     steps:
       - checkout
       - run:
@@ -154,7 +154,7 @@ jobs:
           command: npm run test
   llama-bot-client-deploy:
     machine:
-       enabled: true
+      enabled: true
     steps:
       - checkout
       - run:
@@ -184,10 +184,10 @@ workflows:
       - llama-bot-api-install
       - llama-bot-api-lint:
           requires:
-              - llama-bot-api-install
+            - llama-bot-api-install
       - llama-bot-api-test:
           requires:
-              - llama-bot-api-install
+            - llama-bot-api-install
       - llama-bot-api-deploy:
           requires:
             - llama-bot-api-lint
@@ -197,7 +197,7 @@ workflows:
       - llama-bot-client-install
       - llama-bot-client-test:
           requires:
-              - llama-bot-client-install
+            - llama-bot-client-install
       - llama-bot-client-deploy:
           requires:
-              - llama-bot-client-test
+            - llama-bot-client-test
