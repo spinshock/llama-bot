@@ -2,21 +2,21 @@
   "name": "llama-bot",
   "version": "1.0.0",
   "description": "A discord bot for llamas",
+  "author": "Filipov Yavor",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spinshock/llama-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spinshock/llama-bot/issues"
+  },
   "scripts": {
     "start": "ts-node -r dotenv/config ./src/index.ts",
     "start:watch": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
     "test": "jest --passWithNoTests",
     "lint": "eslint . --ext .ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/spinshock/llama-bot.git"
-  },
-  "author": "Filipov Yavor",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/spinshock/llama-bot/issues"
   },
   "dependencies": {
     "@discordjs/voice": "0.11.0",
@@ -25,7 +25,6 @@
     "discord.js": "14.3.0",
     "dotenv": "16.0.2",
     "pg": "8.8.0",
-    "reflect-metadata": "0.1.13",
     "sequelize": "6.21.4",
     "ws": "8.8.1"
   },

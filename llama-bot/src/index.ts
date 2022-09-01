@@ -1,28 +1,26 @@
-import "reflect-metadata";
-import { LlamaBot } from "./bot";
+import createBot from "./bot";
 import { BetterTwitchTVClient } from "./clients/bttv.client";
-import { TTVClient } from "./clients/ttv.client";
-import { TwitchEmotesClient } from "./clients/twitch-emotes.client";
-require("dotenv").config();
+import twitchTvClient, { initTwitchTvClient } from "./clients/twitch-tv.client";
+import { initConfig } from "./config";
+import emotesRepo from "./database/emotes.repo";
+import ALL_LISTENERS from "./listeners/index";
 
-const TTV_CLIENT_ID = process.env.TTV_CLIENT_ID;
-const TTV_CLIENT_SECRET = process.env.TTV_CLIENT_SECRET;
+initConfig();
+initTwitchTvClient().then(() => {
+  twitchTvClient
+    .getTwitchEmotesFromChannels(["forsen"])
+    .then((emotes) => emotesRepo.addEmotes(...emotes));
+});
 
-if (!TTV_CLIENT_ID || !TTV_CLIENT_SECRET) {
-  throw Error("No ttv credentials provided");
-}
+BetterTwitchTVClient.getBTTVTopEmotes(25).then((emotes) =>
+  emotesRepo.addEmotes(
+    ...emotes.map((emote) => ({ ...emote, url: emote.url || "" }))
+  )
+);
 
-const ttvClient = new TTVClient(TTV_CLIENT_ID, TTV_CLIENT_SECRET);
-
-const twitchEmotesClient = new TwitchEmotesClient(ttvClient);
-
-twitchEmotesClient.getTwitchEmotesFromChannels([""]);
-
-BetterTwitchTVClient.getBTTVTopEmotes(25);
-
-const llamaBot = new LlamaBot(process.env.DISCORD_TOKEN as string);
+const llamaBot = createBot(process.env.DISCORD_TOKEN as string);
+llamaBot.registerListeners(...ALL_LISTENERS);
 llamaBot.start();
-llamaBot.registerListeners();
 
 const exit = (code = 0) => {
   console.log("Gracefully exiting...");

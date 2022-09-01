@@ -1,9 +1,6 @@
 import { Sequelize } from "sequelize";
+import AppConfig from "../config";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("Provide database connection string.");
-}
-
-export default new Sequelize(process.env.DATABASE_URL, {
+export default new Sequelize(AppConfig.databaseUrl, {
   dialect: "postgres",
 });

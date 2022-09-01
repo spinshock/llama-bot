@@ -1,37 +1,11 @@
 import Discord, { Client, IntentsBitField, Partials } from "discord.js";
-import { DiscordBot } from "./decorators/bot";
+import { ListenerCtr } from "./listeners/listener";
 
-@DiscordBot()
-export class LlamaBot {
+class LlamaBot {
   private readonly client: Client;
 
   constructor(private readonly token: string) {
-    this.client = new Discord.Client({
-      partials: [
-        Partials.Channel,
-        Partials.GuildMember,
-        Partials.Message,
-        Partials.Reaction,
-        Partials.User,
-        Partials.ThreadMember,
-        Partials.GuildScheduledEvent,
-      ],
-      intents: [
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.DirectMessages,
-        IntentsBitField.Flags.DirectMessageReactions,
-        IntentsBitField.Flags.DirectMessageTyping,
-      ],
-      presence: {
-        status: "online",
-        activities: [
-          {
-            name: "https://llama-bot-discord.com/",
-          },
-        ],
-      },
-    });
+    this.client = this.initClient();
   }
 
   start(): void {
@@ -42,11 +16,40 @@ export class LlamaBot {
     this.client.destroy();
   }
 
-  registerListeners(): void {
-    this.client.on("messageCreate", (_msg) => {
-      console.log(this.client.emojis.cache.map((emoji) => emoji.name));
+  registerListeners(...listenerCtrs: ListenerCtr[]): void {
+    listenerCtrs
+      .map((listenerCtr) => new listenerCtr())
+      .forEach((listener) => {
+        if (listener.once) {
+          this.client.once(listener.event, listener.handler);
+        } else {
+          this.client.on(listener.event, listener.handler);
+        }
+      });
+  }
 
-      // this.client.emojis.cache.forEach((emoji) => msg.react(emoji));
+  private initClient(): Client {
+    return new Discord.Client({
+      partials: [
+        Partials.Channel,
+        Partials.GuildMember,
+        Partials.Message,
+        Partials.Reaction,
+        Partials.User,
+        Partials.ThreadMember,
+        Partials.GuildScheduledEvent,
+      ],
+      intents: [new IntentsBitField(32767)],
+      presence: {
+        status: "online",
+        activities: [
+          {
+            name: "https://llama-bot-discord.com/",
+          },
+        ],
+      },
     });
   }
 }
+
+export default (token: string): LlamaBot => new LlamaBot(token);

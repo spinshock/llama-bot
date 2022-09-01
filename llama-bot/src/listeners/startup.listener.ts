@@ -1,11 +1,13 @@
-import { Client } from "discord.js";
+import { Awaitable, Client } from "discord.js";
+import { BaseListener } from "./listener";
 
-export default (client: Client): void => {
-  client.on("ready", async () => {
-    if (!client.user || !client.application) {
-      return;
-    }
-    console.log("Discord bot ready.");
+export class StartupListener extends BaseListener<"ready"> {
+  constructor() {
+    super("ready");
+  }
+
+  handler(client: Client<true>): Awaitable<void> {
+    console.log("Llama ready");
     console.log(`${client.user.username} is online`);
-  });
-};
+  }
+}
