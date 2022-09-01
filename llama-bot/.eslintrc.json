@@ -1,22 +1,9 @@
 {
-  "root": true,
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript",
-    "prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
+  "extends": ["../.eslint.json"],
+  "root": false,
   "parserOptions": {
-    "project": "tsconfig.json",
+    "project": "./tsconfig.json",
     "ecmaVersion": 12
-  },
-  "plugins": ["@typescript-eslint", "import"],
-  "env": {
-    "browser": true,
-    "es2021": true
   },
   "rules": {}
 }

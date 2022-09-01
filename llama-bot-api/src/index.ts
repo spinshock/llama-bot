@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express, { Application } from "express";
-import Router from "./routes";
 import { startDb } from "./database/db";
+import Router from "./routes";
 
 const PORT = process.env.PORT || 8080;
 
