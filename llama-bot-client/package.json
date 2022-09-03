@@ -6,6 +6,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "test": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test jest",
+    "lint": "eslint --ext .js,.ts,.tsx src",
+    "lint:fix": "eslint --ext .js,.ts,.tsx src --fix",
     "preview": "vite preview"
   },
   "dependencies": {
