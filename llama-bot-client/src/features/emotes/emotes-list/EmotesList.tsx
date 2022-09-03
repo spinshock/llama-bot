@@ -4,37 +4,12 @@ import { useEmotes } from "../hooks/useEmotes";
 import "./EmotesList.scss";
 
 export const EmotesList = () => {
-  // const emotes: Emote[] = [
-  //   {
-  //     url: "https://c.tenor.com/x6gsbPE8pSMAAAAC/tenor.gif",
-  //     code: "test",
-  //     author: "test",
-  //   },
-  //   {
-  //     url: "https://c.tenor.com/x6gsbPE8pSMAAAAC/tenor.gif",
-  //     code: "test",
-  //     author: "test",
-  //   },
-  //   {
-  //     url: "https://c.tenor.com/x6gsbPE8pSMAAAAC/tenor.gif",
-  //     code: "test",
-  //     author: "test",
-  //   },
-  //   {
-  //     url: "https://c.tenor.com/x6gsbPE8pSMAAAAC/tenor.gif",
-  //     code: "test",
-  //     author: "test",
-  //   },
-  //   {
-  //     url: "https://c.tenor.com/x6gsbPE8pSMAAAAC/tenor.gif",
-  //     code: "test",
-  //     author: "test",
-  //   },
-  // ];
   const [emotes, isLoading, error] = useEmotes();
   return (
     <Container className="emotes-list">
       {!isLoading &&
+        emotes &&
+        emotes.length &&
         emotes.map((emote, i) => (
           <EmoteContainer
             url={emote.url}
@@ -43,6 +18,7 @@ export const EmotesList = () => {
             key={i}
           />
         ))}
+      {!isLoading && error && <p>There was an unexpected error</p>}
       {isLoading && <Spinner animation="border" role="status" />}
     </Container>
   );
