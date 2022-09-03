@@ -9,7 +9,7 @@ export const EmotesList = () => {
     <Container className="emotes-list">
       {!isLoading &&
         emotes &&
-        emotes.length &&
+        !!emotes.length &&
         emotes.map((emote, i) => (
           <EmoteContainer
             url={emote.url}
