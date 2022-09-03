@@ -35,6 +35,9 @@ router.post("/", async (req, res) => {
     res.status(400).send({ error: "Invalid parameters" });
   } else {
     try {
+      if (await getEmoteByCode(code)) {
+        res.status(409).send({ error: "Emote already exists" });
+      }
       const emote = await addEmote(code, url, author);
 
       res.status(201).send(emote);
