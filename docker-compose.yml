@@ -11,6 +11,9 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
+    restart: unless-stopped
+    depends_on:
+      - llama-bot-db
   llama-bot-api:
     container_name: llama-bot-api
     hostname: llama-bot-api
