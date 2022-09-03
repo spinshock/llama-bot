@@ -11,9 +11,9 @@ export const useEmotes = (): [
   boolean,
   Error | AxiosError | undefined
 ] => {
-  let [emotes, setEmotes] = useState<Emote[]>([]);
-  let [isLoading, setIsLoading] = useState<boolean>(true);
-  let [error, setError] = useState<Error | AxiosError>();
+  const [emotes, setEmotes] = useState<Emote[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | AxiosError>();
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
