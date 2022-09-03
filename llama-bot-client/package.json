@@ -15,7 +15,8 @@
     "react-bootstrap": "2.5.0",
     "react-dom": "18.2.0",
     "react-router": "6.3.0",
-    "react-router-dom": "6.3.0"
+    "react-router-dom": "6.3.0",
+    "react-toastify": "^9.0.8"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.5",
