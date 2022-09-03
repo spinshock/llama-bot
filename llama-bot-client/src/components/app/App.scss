@@ -1,0 +1,12 @@
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+.app-container {
+    flex-grow: 1;
+    background-color: var(--llama-body-bg);
+    color: var(--llama-body-color);
+    
+    .app-content {
+        max-width: map-get($container-max-widths, xl);
+    }
+}

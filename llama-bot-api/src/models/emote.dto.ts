@@ -1,4 +1,4 @@
-export class EmoteDTO {
-    code: string;
-    url: string;
+export interface EmoteDTO {
+  code: string;
+  url: string;
 }

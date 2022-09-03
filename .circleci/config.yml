@@ -1,20 +1,203 @@
 version: 2.1
-executors:
-  my-custom-executor:
-    docker:
-      - image: cimg/node:14.17.6
-      
-jobs:
-  llama-bot-build:
 
-    executor: my-custom-executor
+executors:
+  llama-bot-docker-executor:
+    docker:
+      - image: cimg/node:16.17.0
+    working_directory: ~/llama-bot-discord/llama-bot
+  llama-bot-api-docker-executor:
+    docker:
+      - image: cimg/node:16.17.0
+    working_directory: ~/llama-bot-discord/llama-bot-api
+  llama-bot-client-docker-executor:
+    docker:
+      - image: cimg/node:16.17.0
+    working_directory: ~/llama-bot-discord/llama-bot-client
+
+jobs:
+  # llama-bot
+  llama-bot-install:
+    executor: llama-bot-docker-executor
+    steps:
+      - checkout:
+          path: ~/llama-bot-discord
+      # Try to restore dependencies from cache
+      - restore_cache:
+          keys:
+            - llama-bot-nodemodules-v1-{{ checksum "package-lock.json" }}
+            - llama-bot-nodemodules-v1-
+      - run:
+          name: Install dependencies
+          command: npm install
+      # Update dependencies cache
+      - save_cache:
+          key: llama-bot-nodemodules-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      # Save current workflow installed state in cache
+      # .Environment.CIRCLE_SHA1 makes it unique for each build
+      - save_cache:
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+  llama-bot-lint:
+    executor: llama-bot-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: npm run lint
+  llama-bot-test:
+    executor: llama-bot-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Test
+          command: npm run test
+  llama-bot-deploy:
+    machine:
+      enabled: true
     steps:
       - checkout
-      - run: |
-          npm install
-          npm build
+      - run:
+          name: Deploy master to prod
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot master:master; else echo "Skipped"; fi
+      - run:
+          name: Deploy PR to dev
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-dev; else echo "Skipped"; fi
+  # llama-bot-api
+  llama-bot-api-install:
+    executor: llama-bot-api-docker-executor
+    steps:
+      - checkout:
+          path: ~/llama-bot-discord
+      # Try to restore dependencies from cache
+      - restore_cache:
+          keys:
+            - llama-bot-api-nodemodules-v1-{{ checksum "package-lock.json" }}
+            - llama-bot-api-nodemodules-v1-
+      - run:
+          name: Install dependencies
+          command: npm install
+      # Update dependencies cache
+      - save_cache:
+          key: llama-bot-api-nodemodules-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      # Save current workflow installed state in cache
+      # .Environment.CIRCLE_SHA1 makes it unique for each build
+      - save_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+  llama-bot-api-lint:
+    executor: llama-bot-api-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: npm run lint
+  llama-bot-api-test:
+    executor: llama-bot-api-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-api-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Test
+          command: npm run test
+  llama-bot-api-deploy:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy master to prod
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-api master:master; else echo "Skipped"; fi
+      - run:
+          name: Deploy PR to dev
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-api-dev; else echo "Skipped"; fi
+  # llama-bot-client
+  llama-bot-client-install:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - checkout:
+          path: ~/llama-bot-discord
+      # Try to restore dependencies from cache
+      - restore_cache:
+          keys:
+            - llama-bot-client-nodemodules-v1-{{ checksum "package-lock.json" }}
+            - llama-bot-client-nodemodules-v1-
+      - run:
+          name: Install dependencies
+          command: npm install
+      # Update dependencies cache
+      - save_cache:
+          key: llama-bot-client-nodemodules-v1-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      # Save current workflow installed state in cache
+      # .Environment.CIRCLE_SHA1 makes it unique for each build
+      - save_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ./
+  llama-bot-client-test:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Test
+          command: npm run test
+  llama-bot-client-deploy:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy master to prod
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-client master:master; else echo "Skipped"; fi
+      - run:
+          name: Deploy PR to dev
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-client-dev; else echo "Skipped"; fi
 
 workflows:
-  my-custom-workflow:
+  version: 2
+  llama-bot:
     jobs:
-      - llama-bot-build
+      - llama-bot-install
+      - llama-bot-lint:
+          requires:
+            - llama-bot-install
+      - llama-bot-test:
+          requires:
+            - llama-bot-install
+      - llama-bot-deploy:
+          requires:
+            - llama-bot-lint
+            - llama-bot-test
+  llama-bot-api:
+    jobs:
+      - llama-bot-api-install
+      - llama-bot-api-lint:
+          requires:
+            - llama-bot-api-install
+      - llama-bot-api-test:
+          requires:
+            - llama-bot-api-install
+      - llama-bot-api-deploy:
+          requires:
+            - llama-bot-api-lint
+            - llama-bot-api-test
+  llama-bot-client:
+    jobs:
+      - llama-bot-client-install
+      - llama-bot-client-test:
+          requires:
+            - llama-bot-client-install
+      - llama-bot-client-deploy:
+          requires:
+            - llama-bot-client-test

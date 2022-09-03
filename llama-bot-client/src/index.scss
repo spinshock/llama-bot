@@ -1,0 +1,15 @@
+:root {
+    --llama-body-color: #ffffffeb;
+    --llama-body-bg: #1a202c;
+    --llama-header-bg: #171923;
+    --llama-active-link-bg: #ffffff29;
+    --llama-active-link-border-color: #0e0f14;
+    --llama-primary-button-bg: #63b3ed;
+    --llama-primary-button-color: #1A202C;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}

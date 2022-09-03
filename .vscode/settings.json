@@ -1,0 +1,7 @@
+{
+  "eslint.workingDirectories": [
+    "/llama-bot",
+    "/llama-bot-api",
+    "/llama-bot-client"
+  ]
+}

@@ -1,0 +1,16 @@
+.navbar {
+    background-color: var(--llama-header-bg);
+
+    a {
+        text-decoration: none;
+        transition: background-color 0.2s ease-in-out;
+        margin-right: 8px;
+
+        &.active {
+            outline: 1px solid var(--llama-active-link-border-color);
+            background-color: var(--llama-active-link-bg);
+            border-radius: 4px;
+            opacity: 0.8;
+        }
+    }
+}

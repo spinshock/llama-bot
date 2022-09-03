@@ -1,13 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { BaseEntity } from "./Base.entity";
 
-@Entity()
-export class Emote {
-    @PrimaryGeneratedColumn()
-    id: number;
+@Entity({ name: "Emotes" })
+export class Emote extends BaseEntity {
+  @Column({ nullable: false, unique: true })
+  code!: string;
 
-    @Column()
-    code: string;
+  @Column({ nullable: false })
+  url!: string;
 
-    @Column()
-    url: string;
+  @Column({ type: "integer", default: 0 })
+  count!: number;
+
+  @Column({ nullable: false })
+  author!: string;
 }

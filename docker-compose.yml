@@ -1,0 +1,54 @@
+version: "3.9" # optional since v1.27.0
+
+services:
+  llama-bot:
+    container_name: llama-bot
+    hostname: llama-bot
+    build:
+      context: ./llama-bot
+      dockerfile: Dockerfile
+    env_file: llama-bot/.env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
+    restart: unless-stopped
+    depends_on:
+      - llama-bot-db
+  llama-bot-api:
+    container_name: llama-bot-api
+    hostname: llama-bot-api
+    build:
+      context: ./llama-bot-api
+      dockerfile: Dockerfile
+    env_file: llama-bot-api/.env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
+    restart: unless-stopped
+    depends_on:
+      - llama-bot-db
+  llama-bot-db:
+    container_name: llama-bot-db
+    hostname: llama-bot-db
+    image: postgres
+    volumes:
+      - ./volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_DB=llama-bot-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    ports:
+      - 54321:5432
+    restart: unless-stopped
+  llama-bot-client:
+    container_name: llama-bot-client
+    hostname: llama-bot-client
+    build:
+      context: ./llama-bot-client
+      dockerfile: Dockerfile
+    env_file: llama-bot-client/.env
+    ports:
+      - 4200:80
+    restart: always
+    depends_on:
+      - llama-bot-api

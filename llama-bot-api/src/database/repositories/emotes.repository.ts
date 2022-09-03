@@ -1,5 +1,5 @@
 import { getRepository } from "typeorm";
-import { EmoteDTO } from "../../api/models/emote.dto";
+import { EmoteDTO } from "../../models/emote.dto";
 import { Emote } from "../entities/Emote.entity";
 
 export const getEmotes = async (): Promise<Emote[]> => {
@@ -7,14 +7,20 @@ export const getEmotes = async (): Promise<Emote[]> => {
   return await emotesRepo.find();
 };
 
-export const getEmoteByCode = async (code: string): Promise<Emote> => {
+export const getEmoteByCode = async (
+  code: string
+): Promise<Emote | undefined> => {
   const emotesRepo = getRepository(Emote);
   return await emotesRepo.findOne({ where: { code } });
 };
 
-export const addEmote = async (code: string, url: string): Promise<Emote> => {
+export const addEmote = async (
+  code: string,
+  url: string,
+  author: string
+): Promise<Emote> => {
   const emotesRepo = getRepository(Emote);
-  const createdEmote = emotesRepo.create({ code, url });
+  const createdEmote = emotesRepo.create({ code, url, author });
   const savedEmote = await emotesRepo.save(createdEmote);
 
   return savedEmote;
@@ -29,14 +35,13 @@ export const addEmotes = async (emotes: EmoteDTO[]): Promise<Emote[]> => {
   return savedEmotes;
 };
 
-export const removeEmote = async (code: string): Promise<Emote> => {
+export const removeEmote = async (code: string): Promise<Emote | undefined> => {
   const emotesRepo = getRepository(Emote);
   const foundEmote = await emotesRepo.findOne({ where: { code } });
-  let removedEmote: Emote | null;
   if (foundEmote) {
-    removedEmote = await emotesRepo.remove(foundEmote);
+    return await emotesRepo.remove(foundEmote);
   }
-  return removedEmote;
+  return;
 };
 
 export default { getEmotes, getEmoteByCode, addEmote, addEmotes, removeEmote };
