@@ -63,10 +63,10 @@ jobs:
       - checkout
       - run:
           name: Deploy master to prod
-          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord master:master; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-dev; else echo "Skipped"; fi
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
@@ -115,10 +115,10 @@ jobs:
       - checkout
       - run:
           name: Deploy master to prod
-          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-api master:master; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-api master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-api-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-api-dev; else echo "Skipped"; fi
   # llama-bot-client
   llama-bot-client-install:
     executor: llama-bot-client-docker-executor
@@ -159,10 +159,10 @@ jobs:
       - checkout
       - run:
           name: Deploy master to prod
-          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-client master:master; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-client master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-discord-client-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-client-dev; else echo "Skipped"; fi
 
 workflows:
   version: 2
