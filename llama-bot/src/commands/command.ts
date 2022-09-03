@@ -1,8 +1,12 @@
 import { ChatInputCommandInteraction } from "discord.js";
 import { AddEmoteCommand } from "./add-emote.command";
 
+export enum CommandName {
+  ADD_EMOTE = "addemote",
+}
+
 export const ALL_COMMANDS = {
-  AddEmote: AddEmoteCommand,
+  [CommandName.ADD_EMOTE]: AddEmoteCommand,
 };
 
 export type Command = {
@@ -13,7 +17,3 @@ export type Command = {
 export type CommandMap = {
   [key: string]: Command;
 };
-
-export enum CommandName {
-  ADD_EMOTE = "addemote",
-}

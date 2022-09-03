@@ -6,7 +6,7 @@ import { Command } from "./command";
 export const AddEmoteCommand: Command = {
   commandName: "addemote",
   handler: async (interaction: ChatInputCommandInteraction): Promise<void> => {
-    const code = interaction.options.get("code");
+    const code = interaction.options.get("code")?.value;
     const foundEmote = await Emote.findOne({ where: { code } });
     if (foundEmote) {
       interaction.reply("Emote with this code already exists");
@@ -17,7 +17,8 @@ export const AddEmoteCommand: Command = {
       interaction.reply("Invalid URL");
       return;
     }
-    await Emote.create({ code, url });
+    const author = interaction.user.username;
+    await Emote.create({ code, url, author });
     interaction.reply("Emote added!");
   },
 };
