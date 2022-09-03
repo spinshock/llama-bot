@@ -48,12 +48,12 @@ if (process.env.NODE_ENV === "production") {
   parsedConfig.TTV_CLIENT_SECRET = process.env.TTV_CLIENT_SECRET || "";
 } else {
   const error = dotEnvConfigOutput.error;
-  if ((dotEnvConfigOutput && error) || !dotEnvConfigOutput.parsedConfig) {
+  if ((dotEnvConfigOutput && error) || !dotEnvConfigOutput.parsed) {
     throw Error(
       "Unexpected error while reading .env\nPlease provide .env config"
     );
   }
-  parsedConfig = dotEnvConfigOutput.parsedConfig as unknown as ILlamaConfig;
+  parsedConfig = dotEnvConfigOutput.parsed as unknown as ILlamaConfig;
   const missingConfigs = Object.values(parsedConfig).filter((val) => !val);
   if (missingConfigs.length) {
     throw new Error(
