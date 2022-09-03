@@ -1,8 +1,8 @@
 import express from "express";
-import EmotesRouter from "./emotes.router";
+import EmoteRouter from "./emotes.router";
 
 const router = express.Router();
 
-router.use("/emotes", EmotesRouter);
+router.use("/emote", EmoteRouter);
 
 export default router;

@@ -39,7 +39,10 @@ class LlamaBot {
         Partials.ThreadMember,
         Partials.GuildScheduledEvent,
       ],
-      intents: [new IntentsBitField(32767)],
+      intents: [
+        new IntentsBitField(32767),
+        IntentsBitField.Flags.MessageContent,
+      ],
       presence: {
         status: "online",
         activities: [

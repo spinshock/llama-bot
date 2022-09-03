@@ -1,5 +1,6 @@
-import { Awaitable, Events, Message } from "discord.js";
-import emotesRepo from "../database/emotes.repo";
+import { Events, Message } from "discord.js";
+import { Op } from "sequelize";
+import Emote from "../database/models/emote.model";
 import { BaseListener } from "./listener";
 
 export class EmoteListener extends BaseListener<Events.MessageCreate> {
@@ -7,13 +8,16 @@ export class EmoteListener extends BaseListener<Events.MessageCreate> {
     super(Events.MessageCreate);
   }
 
-  handler(message: Message): Awaitable<void> {
+  async handler(message: Message): Promise<void> {
     if (message.author.bot) return;
-    console.log(message.content);
 
-    const foundEmote = emotesRepo.getEmote(message.content);
+    const foundEmote = await Emote.findOne({
+      where: { code: { [Op.eq]: message.content } },
+    });
     if (foundEmote) {
-      message.channel.send(foundEmote.url);
+      await message.channel.send(foundEmote.getDataValue("url"));
+      foundEmote.count += 1;
+      foundEmote.save();
     }
   }
 }

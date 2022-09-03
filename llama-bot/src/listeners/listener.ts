@@ -7,7 +7,9 @@ export interface IListener<
 > {
   once: boolean;
   event: ClientEventKey;
-  handler(...args: ClientEvents[ClientEventKey]): Awaitable<void>;
+  handler(
+    ...args: ClientEvents[ClientEventKey]
+  ): Awaitable<void> | Promise<void>;
 }
 
 export abstract class BaseListener<
@@ -23,7 +25,9 @@ export abstract class BaseListener<
     return this._once;
   }
 
-  abstract handler(...args: ClientEvents[ClientEventKey]): Awaitable<void>;
+  abstract handler(
+    ...args: ClientEvents[ClientEventKey]
+  ): Awaitable<void> | Promise<void>;
 }
 
 export type ListenerCtr = new () => IListener;

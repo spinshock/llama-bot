@@ -8,17 +8,15 @@ services:
       context: ./llama-bot
       dockerfile: Dockerfile
     env_file: llama-bot/.env
-    # volumes:
-    #   - .llama-bot:/app
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
   llama-bot-api:
     container_name: llama-bot-api
     hostname: llama-bot-api
     build:
       context: ./llama-bot-api
       dockerfile: Dockerfile
-    # volumes:
-    #   - ./llama-bot-api/src/:/usr/src/app/
-    #   - /usr/src/app/node_modules
     env_file: llama-bot-api/.env
     restart: unless-stopped
     depends_on:
@@ -30,7 +28,7 @@ services:
     volumes:
       - ./volume:/var/lib/postgresql
     environment:
-      - POSTGRES_DB=llama-bot-database
+      - POSTGRES_DB=llama-bot-db
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
     ports:

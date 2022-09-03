@@ -1,5 +1,5 @@
-export const Home = () => {
-  return <div>Home page</div>;
-};
+import { Container } from "react-bootstrap";
 
-export default Home;
+export default function Home() {
+  return <Container>Home</Container>;
+}

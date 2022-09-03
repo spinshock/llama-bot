@@ -43,4 +43,4 @@ ENV TTV_CLIENT_ID=${TTV_CLIENT_ID}
 
 ENV TTV_CLIENT_SECRET=${TTV_CLIENT_SECRET}
 
-CMD [ "node", "--unhandled-rejections=strict", "--trace-deprecation=true", "dist/bot.js" ]
+CMD [ "node", "--unhandled-rejections=strict", "--trace-deprecation=true", "dist/index.js" ]
