@@ -1,4 +1,10 @@
-import Discord, { Client, IntentsBitField, Partials } from "discord.js";
+import Discord, {
+  Client,
+  IntentsBitField,
+  Interaction,
+  Partials,
+} from "discord.js";
+import { CommandMap, CommandName } from "./commands/command";
 import AppConfig from "./config";
 import { ListenerCtr } from "./listeners/listener";
 
@@ -27,6 +33,19 @@ class LlamaBot {
           this.client.on(listener.event, listener.handler);
         }
       });
+  }
+
+  registerCommands(commands: CommandMap): void {
+    this.client.on("interactionCreate", async (interaction: Interaction) => {
+      if (!interaction.isChatInputCommand()) return;
+      if (this.isValidCommandName(interaction.commandName)) {
+        commands[interaction.commandName].handler(interaction);
+      }
+    });
+  }
+
+  private isValidCommandName(commandName: string): commandName is CommandName {
+    return Object.values(CommandName).includes(commandName as CommandName);
   }
 
   private initClient(): Client {

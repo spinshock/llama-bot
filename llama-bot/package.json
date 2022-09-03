@@ -16,9 +16,11 @@
     "start:watch": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "build": "tsc",
     "test": "jest --passWithNoTests",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "register-commands": "node -r dotenv/config ./scripts/deploy-commands.js"
   },
   "dependencies": {
+    "@discordjs/rest": "^1.1.0",
     "@discordjs/voice": "0.11.0",
     "axios": "0.27.2",
     "discord-api-types": "0.37.5",
@@ -26,6 +28,7 @@
     "dotenv": "16.0.2",
     "pg": "8.8.0",
     "sequelize": "6.21.4",
+    "validator": "^13.7.0",
     "ws": "8.8.1"
   },
   "devDependencies": {
