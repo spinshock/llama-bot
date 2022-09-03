@@ -3,7 +3,7 @@ import { BaseEntity } from "./Base.entity";
 
 @Entity({ name: "Emotes" })
 export class Emote extends BaseEntity {
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   code!: string;
 
   @Column({ nullable: false })
@@ -12,6 +12,6 @@ export class Emote extends BaseEntity {
   @Column({ type: "integer", default: 0 })
   count!: number;
 
-  @Column()
+  @Column({ nullable: false })
   author!: string;
 }

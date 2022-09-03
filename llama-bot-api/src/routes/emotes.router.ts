@@ -22,19 +22,28 @@ router.get("/", async (_req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { code, url } = req.body;
+  const { code, url, author } = req.body;
   if (
     !code ||
     !url ||
+    !author ||
     typeof code !== "string" ||
     typeof url !== "string" ||
+    typeof author !== "string" ||
     !validator.isURL(url)
   ) {
     res.status(400).send({ error: "Invalid parameters" });
-  }
-  const emote = await addEmote(code, url);
+  } else {
+    try {
+      const emote = await addEmote(code, url, author);
 
-  return res.status(201).send(emote);
+      res.status(201).send(emote);
+    } catch (error) {
+      console.error(error);
+
+      res.status(500).send({ error: "Internal server error" });
+    }
+  }
 });
 
 export default router;

@@ -14,9 +14,13 @@ export const getEmoteByCode = async (
   return await emotesRepo.findOne({ where: { code } });
 };
 
-export const addEmote = async (code: string, url: string): Promise<Emote> => {
+export const addEmote = async (
+  code: string,
+  url: string,
+  author: string
+): Promise<Emote> => {
   const emotesRepo = getRepository(Emote);
-  const createdEmote = emotesRepo.create({ code, url });
+  const createdEmote = emotesRepo.create({ code, url, author });
   const savedEmote = await emotesRepo.save(createdEmote);
 
   return savedEmote;

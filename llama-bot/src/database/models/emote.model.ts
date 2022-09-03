@@ -13,6 +13,7 @@ export default Emote.init(
     code: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     url: {
       type: DataTypes.STRING,
