@@ -38,39 +38,37 @@ export class LlamaConfig {
   }
 }
 
-const AppConfig = new LlamaConfig();
+const dotEnvConfigOutput = config();
+let parsedConfig: ILlamaConfig = {} as ILlamaConfig;
 
-((): void => {
-  const dotEnvConfigOutput = config();
-  let parsedConfig: ILlamaConfig = {} as ILlamaConfig;
-
-  if (process.env.NODE_ENV === "production") {
-    parsedConfig.DATABASE_URL = process.env.DATABASE_URL || "";
-    parsedConfig.DISCORD_TOKEN = process.env.DISCORD_TOKEN || "";
-    parsedConfig.TTV_CLIENT_ID = process.env.TTV_CLIENT_ID || "";
-    parsedConfig.TTV_CLIENT_SECRET = process.env.TTV_CLIENT_SECRET || "";
-  } else {
-    const error = dotEnvConfigOutput.error;
-    if (error) {
-      throw Error(
-        "Unexpected error while reading .env\nPlease provide .env config"
-      );
-    }
-    parsedConfig = (dotEnvConfigOutput as any)
-      .parsed as unknown as ILlamaConfig;
-    const missingConfigs = Object.values(parsedConfig).filter((val) => !val);
-    if (missingConfigs.length) {
-      throw new Error(
-        "Provide config for keys:\n" +
-          Object.keys(parsedConfig).reduce((keys, key) => keys + key + ",", "")
-      );
-    }
+if (process.env.NODE_ENV === "production") {
+  parsedConfig.DATABASE_URL = process.env.DATABASE_URL || "";
+  parsedConfig.DISCORD_TOKEN = process.env.DISCORD_TOKEN || "";
+  parsedConfig.TTV_CLIENT_ID = process.env.TTV_CLIENT_ID || "";
+  parsedConfig.TTV_CLIENT_SECRET = process.env.TTV_CLIENT_SECRET || "";
+} else {
+  const error = dotEnvConfigOutput.error;
+  if ((dotEnvConfigOutput && error) || !dotEnvConfigOutput.parsedConfig) {
+    throw Error(
+      "Unexpected error while reading .env\nPlease provide .env config"
+    );
   }
-  (AppConfig as any)._databaseUrl = parsedConfig.DATABASE_URL;
-  (AppConfig as any)._nodeEnv = parsedConfig.NODE_ENV;
-  (AppConfig as any)._discordToken = parsedConfig.DISCORD_TOKEN;
-  (AppConfig as any)._ttvClientId = parsedConfig.TTV_CLIENT_ID;
-  (AppConfig as any)._ttvClientSecret = parsedConfig.TTV_CLIENT_SECRET;
-})();
+  parsedConfig = dotEnvConfigOutput.parsedConfig as unknown as ILlamaConfig;
+  const missingConfigs = Object.values(parsedConfig).filter((val) => !val);
+  if (missingConfigs.length) {
+    throw new Error(
+      "Provide config for keys:\n" +
+        Object.keys(parsedConfig).reduce((keys, key) => keys + key + ",", "")
+    );
+  }
+}
+
+const AppConfig: LlamaConfig = new LlamaConfig(
+  parsedConfig.DATABASE_URL,
+  parsedConfig.NODE_ENV,
+  parsedConfig.DISCORD_TOKEN,
+  parsedConfig.TTV_CLIENT_ID,
+  parsedConfig.TTV_CLIENT_SECRET
+);
 
 export default AppConfig;
