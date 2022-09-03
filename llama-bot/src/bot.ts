@@ -1,15 +1,16 @@
 import Discord, { Client, IntentsBitField, Partials } from "discord.js";
+import AppConfig from "./config";
 import { ListenerCtr } from "./listeners/listener";
 
 class LlamaBot {
   private readonly client: Client;
 
-  constructor(private readonly token: string) {
+  constructor() {
     this.client = this.initClient();
   }
 
   start(): void {
-    this.client.login(this.token);
+    this.client.login(AppConfig.discordToken);
   }
 
   destroy(): void {
@@ -55,4 +56,4 @@ class LlamaBot {
   }
 }
 
-export default (token: string): LlamaBot => new LlamaBot(token);
+export default (): LlamaBot => new LlamaBot();

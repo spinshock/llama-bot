@@ -4,7 +4,7 @@ import createBot from "./bot";
 import "./database/database";
 import ALL_LISTENERS from "./listeners/index";
 
-const llamaBot = createBot(process.env.DISCORD_TOKEN as string);
+const llamaBot = createBot();
 llamaBot.registerListeners(...ALL_LISTENERS);
 llamaBot.start();
 
