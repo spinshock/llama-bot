@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     env_file: llama-bot/.env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
     restart: unless-stopped
     depends_on:
@@ -21,6 +21,9 @@ services:
       context: ./llama-bot-api
       dockerfile: Dockerfile
     env_file: llama-bot-api/.env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
     restart: unless-stopped
     depends_on:
       - llama-bot-db
