@@ -66,7 +66,7 @@ jobs:
           command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-dev  ${CIRCLE_BRANCH}:master; else echo "Skipped"; fi
   # llama-bot-api
   llama-bot-api-install:
     executor: llama-bot-api-docker-executor
@@ -118,7 +118,7 @@ jobs:
           command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-api master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-api-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-api-dev  ${CIRCLE_BRANCH}:master; else echo "Skipped"; fi
   # llama-bot-client
   llama-bot-client-install:
     executor: llama-bot-client-docker-executor
@@ -144,6 +144,14 @@ jobs:
           key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ./
+  llama-bot-client-lint:
+    executor: llama-bot-client-docker-executor
+    steps:
+      - restore_cache:
+          key: llama-bot-client-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+          name: Lint
+          command: npm run lint
   llama-bot-client-test:
     executor: llama-bot-client-docker-executor
     steps:
@@ -162,42 +170,44 @@ jobs:
           command: if [ "${CIRCLE_BRANCH}" == "master" ]; then git push dokku@llama-bot-discord.com:llama-bot-client master:master; else echo "Skipped"; fi
       - run:
           name: Deploy PR to dev
-          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-client-dev; else echo "Skipped"; fi
+          command: if [ "${CIRCLE_BRANCH}" != "master" ] && [ "${CIRCLE_PULL_REQUEST##*/}" != "" ]; then git push dokku@llama-bot-discord.com:llama-bot-client-dev ${CIRCLE_BRANCH}:master; else echo "Skipped"; fi
 
 workflows:
   version: 2
-  llama-bot:
+  install-test-build-deploy:
     jobs:
+      - llama-bot-api-install
+      - llama-bot-client-install
       - llama-bot-install
       - llama-bot-lint:
           requires:
             - llama-bot-install
-      - llama-bot-test:
-          requires:
-            - llama-bot-install
-      - llama-bot-deploy:
-          requires:
-            - llama-bot-lint
-            - llama-bot-test
-  llama-bot-api:
-    jobs:
-      - llama-bot-api-install
       - llama-bot-api-lint:
           requires:
             - llama-bot-api-install
+      - llama-bot-client-lint:
+          requires:
+            - llama-bot-client-install
       - llama-bot-api-test:
           requires:
             - llama-bot-api-install
+      - llama-bot-client-test:
+          requires:
+            - llama-bot-client-install
+      - llama-bot-test:
+          requires:
+            - llama-bot-install
       - llama-bot-api-deploy:
           requires:
             - llama-bot-api-lint
             - llama-bot-api-test
-  llama-bot-client:
-    jobs:
-      - llama-bot-client-install
-      - llama-bot-client-test:
-          requires:
-            - llama-bot-client-install
+            - llama-bot-client-lint
+            - llama-bot-client-test
+            - llama-bot-lint
+            - llama-bot-test
       - llama-bot-client-deploy:
           requires:
-            - llama-bot-client-test
+            - llama-bot-api-deploy
+      - llama-bot-deploy:
+          requires:
+            - llama-bot-client-deploy
