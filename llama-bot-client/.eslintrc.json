@@ -13,7 +13,7 @@
     "project": "tsconfig.json",
     "ecmaVersion": 12
   },
-  "plugins": ["@typescript-eslint", "import"],
+  "plugins": ["@typescript-eslint", "import", "react-hooks"],
   "env": {
     "browser": true,
     "es2021": true

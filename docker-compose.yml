@@ -7,26 +7,33 @@ services:
     build:
       context: ./llama-bot
       dockerfile: Dockerfile
+    depends_on:
+      - llama-bot-db
     env_file: llama-bot/.env
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
+    networks:
+      - default
     restart: unless-stopped
-    depends_on:
-      - llama-bot-db
   llama-bot-api:
     container_name: llama-bot-api
     hostname: llama-bot-api
     build:
       context: ./llama-bot-api
       dockerfile: Dockerfile
+    depends_on:
+      - llama-bot-db
     env_file: llama-bot-api/.env
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgres://root:root@llama-bot-db:5432/llama-bot-db
+      - PORT=8080
+    ports:
+      - 8080:8080
+    networks:
+      - default
     restart: unless-stopped
-    depends_on:
-      - llama-bot-db
   llama-bot-db:
     container_name: llama-bot-db
     hostname: llama-bot-db
@@ -39,6 +46,8 @@ services:
       - POSTGRES_PASSWORD=root
     ports:
       - 54321:5432
+    networks:
+      - default
     restart: unless-stopped
   llama-bot-client:
     container_name: llama-bot-client
@@ -46,9 +55,13 @@ services:
     build:
       context: ./llama-bot-client
       dockerfile: Dockerfile
-    env_file: llama-bot-client/.env
-    ports:
-      - 4200:80
-    restart: always
     depends_on:
       - llama-bot-api
+    env_file: llama-bot-client/.env
+    environment:
+      - API_URL=llama-bot-api:8080
+    ports:
+      - 4200:80
+    networks:
+      - default
+    restart: always
