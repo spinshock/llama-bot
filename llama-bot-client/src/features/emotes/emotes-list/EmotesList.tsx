@@ -1,3 +1,5 @@
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChangeEvent, useMemo, useState } from "react";
 import {
   Container,
@@ -6,7 +8,6 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { Search } from "react-bootstrap-icons";
 import { useBreakpoint } from "use-breakpoint";
 import { DEFAULT_BREAKPOINTS } from "../../../responsive";
 import { EmoteContainer } from "../emote-container/EmoteContainer";
@@ -37,7 +38,7 @@ export const EmotesList = () => {
           }
         >
           <InputGroup.Text id="basic-addon1">
-            <Search />
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
           </InputGroup.Text>
           <FormControl placeholder="Search emotes" />
         </InputGroup>
