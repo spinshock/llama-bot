@@ -1,6 +1,7 @@
+import { faClipboard } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from "react";
 import { Card } from "react-bootstrap";
-import { Clipboard } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import { Emote } from "../models/emote";
 import "./EmoteContainer.scss";
@@ -19,8 +20,8 @@ export const EmoteContainer = ({ url, code, author }: EmoteProps) => {
       <Card.Body>
         <Card.Title className="md-2">
           <span className="mx-1">{code}</span>
-          <Clipboard
-            className="clipboard-btn"
+          <FontAwesomeIcon
+            icon={faClipboard}
             onClick={() => copyToClipboard()}
           />
         </Card.Title>
