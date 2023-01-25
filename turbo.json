@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "dev": {
+      "dependsOn": ["build"],
+      "inputs": ["src/**/*", "package.json", "tsconfig.json"],
+      "persistent": true
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*", "package.json", "tsconfig.json"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"]
+    },
+    "lint": {}
+  },
+  "globalDependencies": [
+    ".env", // contents will impact hashes of all tasks
+    "tsconfig.json" // contents will impact hashes of all tasks
+  ]
+}

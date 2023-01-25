@@ -1,0 +1,24 @@
+{
+  "name": "llama-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "ts-node -r dotenv/config ./src/index.ts",
+    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\"",
+    "build": "tsc",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "register-commands": "node -r dotenv/config ./scripts/deploy-commands.js"
+  },
+  "dependencies": {
+    "@discordjs/rest": "1.5.0",
+    "@discordjs/voice": "0.14.0",
+    "axios": "1.2.4",
+    "discord.js": "14.7.1",
+    "dotenv": "16.0.3",
+    "pg": "8.8.0",
+    "sequelize": "6.28.0",
+    "validator": "^13.7.0",
+    "ws": "8.12.0"
+  }
+}
