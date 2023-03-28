@@ -35,7 +35,7 @@ services:
   llama-bot-db:
     container_name: llama-bot-db
     hostname: llama-bot-db
-    image: postgres
+    image: postgres:15.1
     volumes:
       - ./volume:/var/lib/postgresql
     environment:
