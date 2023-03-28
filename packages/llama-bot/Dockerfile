@@ -13,7 +13,7 @@ WORKDIR /app
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
-RUN npm install -g turbo
+RUN npm install -g turbo@1.8.0
 COPY --chown=node:node . .
 RUN turbo prune --scope=llama-bot --docker
 
@@ -37,7 +37,7 @@ COPY turbo.json turbo.json
 ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 ENV PATH=$PATH:/home/node/.npm-global/bin
 
-RUN npm install -g turbo
+RUN npm install -g turbo@1.8.0
 
 RUN turbo run build --filter=llama-bot...
 
